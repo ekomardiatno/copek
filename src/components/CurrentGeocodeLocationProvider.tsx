@@ -6,17 +6,13 @@ import React, {
   useState,
 } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  CurrentLocationStateType,
-} from '../redux/reducers/app.reducer';
+import { CurrentLocationStateType } from '../redux/reducers/app.reducer';
 import { getGeocode } from '../services/google-services';
 import { PlaceType } from '../types/google-map-types';
 
 export const CurrentGeocodeLocationContext = createContext<{
   currentGeocodeLocation: PlaceType[];
-  setCurrentGeocodeLocation: React.Dispatch<
-    React.SetStateAction<PlaceType[]>
-  >;
+  setCurrentGeocodeLocation: React.Dispatch<React.SetStateAction<PlaceType[]>>;
   loadingCurrentGeocodeLocation: boolean;
   setLoadingCurrentGeocodeLocation: React.Dispatch<
     React.SetStateAction<boolean>
@@ -25,6 +21,7 @@ export const CurrentGeocodeLocationContext = createContext<{
   setCurrentGeocodeLocationRequestError: React.Dispatch<
     React.SetStateAction<Error | TypeError | null>
   >;
+  cityName: string;
 }>({
   currentGeocodeLocation: [],
   setCurrentGeocodeLocation: () => {},
@@ -32,6 +29,7 @@ export const CurrentGeocodeLocationContext = createContext<{
   setLoadingCurrentGeocodeLocation: () => {},
   currentGeocodeLocationRequestError: null,
   setCurrentGeocodeLocationRequestError: () => {},
+  cityName: '',
 });
 
 export default function CurrentGeocodeLocationProvider({
@@ -51,6 +49,7 @@ export default function CurrentGeocodeLocationProvider({
     currentGeocodeLocationRequestError,
     setCurrentGeocodeLocationRequestError,
   ] = useState<Error | TypeError | null>(null);
+  const [cityName, setCityName] = useState<string>('');
 
   useEffect(() => {
     if (location) {
@@ -60,6 +59,7 @@ export default function CurrentGeocodeLocationProvider({
 
   const fetchGeocode = useCallback(
     async (signal: AbortSignal) => {
+      if (!loadingCurrentGeocodeLocation) return null;
       setCurrentGeocodeLocationRequestError(null);
       try {
         const response = await getGeocode(signal, location);
@@ -76,21 +76,36 @@ export default function CurrentGeocodeLocationProvider({
         setLoadingCurrentGeocodeLocation(false);
       }
     },
-    [location],
+    [location, loadingCurrentGeocodeLocation],
   );
 
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    if (loadingCurrentGeocodeLocation) {
-      fetchGeocode(signal);
-      return () => {
-        controller.abort();
-      };
-    } else {
+    fetchGeocode(signal);
+    return () => {
       controller.abort();
+    };
+  }, [fetchGeocode]);
+
+  useEffect(() => {
+    if (currentGeocodeLocation.length > 0) {
+      const findCity = currentGeocodeLocation.find(row =>
+        row.types?.includes('administrative_area_level_2'),
+      );
+      if (findCity) {
+        const city = findCity.address_components?.find(row =>
+          row.types?.includes('administrative_area_level_2'),
+        );
+        setCityName(city?.short_name || '');
+      } else {
+        const city = currentGeocodeLocation[0].address_components?.find(row =>
+          row.types?.includes('administrative_area_level_2'),
+        );
+        setCityName(city?.short_name || '');
+      }
     }
-  }, [loadingCurrentGeocodeLocation, fetchGeocode]);
+  }, [currentGeocodeLocation]);
 
   return (
     <CurrentGeocodeLocationContext.Provider
@@ -101,6 +116,7 @@ export default function CurrentGeocodeLocationProvider({
         setLoadingCurrentGeocodeLocation,
         currentGeocodeLocationRequestError,
         setCurrentGeocodeLocationRequestError,
+        cityName,
       }}
     >
       {children}

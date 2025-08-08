@@ -7,6 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "./screens/HomeScreen";
 import SplashScreen from "./screens/SplashScreen";
 import FoodScreen from "./screens/FoodScreen";
+import SearchMenuScreen from "./screens/SearchMenuScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +52,13 @@ function RootStack() {
         }}
         name="Food"
         component={FoodScreen}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="SearchMenu"
+        component={SearchMenuScreen}
       />
     </Stack.Navigator>
   );

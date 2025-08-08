@@ -19,15 +19,17 @@ import {
 import Spinner from '../../components/Spinner';
 import getImageThumb from '../../utils/getImageThumb';
 import { CurrentGeocodeLocationContext } from '../../components/CurrentGeocodeLocationProvider';
+import { useNavigation } from '@react-navigation/native';
 
 export default function FoodScreen(): JSX.Element {
+  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const { currentGeocodeLocation: geocode } = useContext(
-    CurrentGeocodeLocationContext,
-  );
   const currentLocation = useSelector<any>(
     state => state?.appReducer?.currentLocation,
   ) as CurrentLocationStateType | null;
+  const { currentGeocodeLocation: geocode } = useContext(
+    CurrentGeocodeLocationContext,
+  );
   const [cityName, setCityName] = useState<string>('');
   const [isLoadingCollection, setIsLoadingCollection] = useState(true);
   const [collectionRequestError, setCollectionRequestError] = useState<
@@ -39,9 +41,10 @@ export default function FoodScreen(): JSX.Element {
 
   const fetchCollection = useCallback(
     async (signal: AbortSignal) => {
-      setCollectionRequestError(null);
+      if (!isLoadingCollection) return;
       if (!currentLocation) return;
       if (!cityName) return;
+      setCollectionRequestError(null);
       try {
         const result = await getFoodHomeCollection(
           signal,
@@ -59,21 +62,17 @@ export default function FoodScreen(): JSX.Element {
         setIsLoadingCollection(false);
       }
     },
-    [cityName, currentLocation],
+    [cityName, currentLocation, isLoadingCollection],
   );
 
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    if (isLoadingCollection) {
-      fetchCollection(signal);
-      return () => {
-        controller.abort();
-      };
-    } else {
+    fetchCollection(signal);
+    return () => {
       controller.abort();
-    }
-  }, [isLoadingCollection, fetchCollection]);
+    };
+  }, [fetchCollection]);
 
   useEffect(() => {
     if (geocode.length > 0) {
@@ -100,7 +99,9 @@ export default function FoodScreen(): JSX.Element {
       <TouchableHighlight
         style={{ borderRadius: 10, marginHorizontal: 15, marginBottom: 20 }}
         activeOpacity={0.85}
-        onPress={() => {}}
+        onPress={() => {
+          navigation.navigate('SearchMenu' as never);
+        }}
       >
         <View
           style={{
@@ -251,7 +252,7 @@ export default function FoodScreen(): JSX.Element {
                   subTitle={row.title[1]}
                   containerStyle={{ marginHorizontal: -20, marginTop: 20 }}
                 >
-                  <View style={{ gap: 10 }}>
+                  <View style={{ gap: 10, marginHorizontal: 20 }}>
                     {row.data.map((item, j) => {
                       if (row.category === 'food') {
                         const foodItem = item as FoodType;

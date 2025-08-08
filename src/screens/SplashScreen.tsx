@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
 import { JSX, useEffect } from 'react';
 import { View } from 'react-native';
@@ -27,7 +28,7 @@ export default function SplashScreen(): JSX.Element {
         ],
       });
     }
-  }, [session]);
+  }, [navigation, session]);
 
-  return <View style={{ flex: 1 }}></View>;
+  return <View style={{ flex: 1 }} />;
 }

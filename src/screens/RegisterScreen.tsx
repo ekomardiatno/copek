@@ -78,6 +78,7 @@ export default function RegisterScreen(): JSX.Element {
 
   const fetchRegister = useCallback(
     async (signal: AbortSignal) => {
+      if (!isRegistering) return;
       setRegisterError(null);
       try {
         const payload = {
@@ -98,21 +99,17 @@ export default function RegisterScreen(): JSX.Element {
       }
       setIsRegistering(false);
     },
-    [password, name, phone, email, navigation],
+    [password, name, phone, email, navigation, isRegistering],
   );
 
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    if (isRegistering) {
-      fetchRegister(signal);
-      return () => {
-        controller.abort();
-      };
-    } else {
+    fetchRegister(signal);
+    return () => {
       controller.abort();
-    }
-  }, [isRegistering, fetchRegister]);
+    };
+  }, [fetchRegister]);
 
   return (
     <>

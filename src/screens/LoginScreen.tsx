@@ -5,7 +5,7 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   View,
-  TextInput
+  TextInput,
 } from 'react-native';
 import {
   useSafeAreaFrame,
@@ -74,6 +74,7 @@ export default function LoginScreen() {
 
   const fetchLogin = useCallback(
     async (signal: AbortSignal) => {
+      if (!isLoggingIn) return;
       setError(null);
       try {
         const payload = {
@@ -108,21 +109,17 @@ export default function LoginScreen() {
         setIsLoggingIn(false);
       }
     },
-    [phone, password, dispatch, navigation],
+    [phone, password, dispatch, navigation, isLoggingIn],
   );
 
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    if (isLoggingIn) {
-      fetchLogin(signal);
-      return () => {
-        controller.abort();
-      };
-    } else {
+    fetchLogin(signal);
+    return () => {
       controller.abort();
-    }
-  }, [isLoggingIn, fetchLogin]);
+    };
+  }, [fetchLogin]);
 
   return (
     <View style={{ flex: 1, paddingBottom: insets.bottom }}>

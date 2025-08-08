@@ -1,9 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
-import { JSX } from "react";
-import { Image, Text, TouchableHighlight, View } from "react-native";
-import { themeColors } from "../../constants";
-import modCurrency from "../../utils/modCurrency";
-import modDistance from "../../utils/modDistance";
+import { JSX } from 'react';
+import { Image, Text, TouchableHighlight, View } from 'react-native';
+import { themeColors } from '../../constants';
+import modCurrency from '../../utils/modCurrency';
+import modDistance from '../../utils/modDistance';
 
 export default function ItemHorizontal({
   imgUri,
@@ -30,7 +30,6 @@ export default function ItemHorizontal({
     >
       <View
         style={{
-          paddingHorizontal: 15,
           flexDirection: 'row',
           position: 'relative',
         }}
@@ -92,7 +91,7 @@ export default function ItemHorizontal({
               {subTitle}
             </Text>
           )}
-          {price ? (
+          {price && (
             <View style={{ flexDirection: 'row', marginHorizontal: -5 }}>
               <Text
                 style={{
@@ -118,7 +117,8 @@ export default function ItemHorizontal({
                 </Text>
               )}
             </View>
-          ) : distance ? (
+          )}
+          {distance && (
             <View style={{ flexDirection: 'row', marginHorizontal: -5 }}>
               <Text
                 style={{
@@ -127,10 +127,10 @@ export default function ItemHorizontal({
                   marginHorizontal: 5,
                 }}
               >
-                {modDistance(distance)}
+                ~{modDistance(distance)}
               </Text>
             </View>
-          ) : null}
+          )}
         </View>
       </View>
     </TouchableHighlight>
