@@ -1,8 +1,7 @@
-import { SET_CURRENT_GEOCODE_LOCATION, SET_CURRENT_LOCATION, SET_SESSION } from '../types';
+import { SET_CURRENT_LOCATION, SET_SESSION } from '../types';
 import { PayloadAction } from '@reduxjs/toolkit';
 import persistReducer from 'redux-persist/es/persistReducer';
 import persistConfig from '../persistConfig';
-import { PlaceType } from '../../types/google-map-types';
 
 export type SessionStateType = {
   userId: string;
@@ -16,16 +15,12 @@ export type CurrentLocationStateType = {
   longitude: number;
 };
 
-export type CurrentGeocodeLocationStateType = PlaceType[];
-
 const initialState: {
   session: SessionStateType | null;
   currentLocation: CurrentLocationStateType | null;
-  currentGeocodeLocation: CurrentGeocodeLocationStateType;
 } = {
   session: null,
   currentLocation: null,
-  currentGeocodeLocation: [],
 };
 
 const appReducer = (
@@ -43,11 +38,6 @@ const appReducer = (
       return {
         ...state,
         currentLocation: payload,
-      };
-    case SET_CURRENT_GEOCODE_LOCATION:
-      return {
-        ...state,
-        currentGeocodeLocation: payload,
       };
     default:
       return state;

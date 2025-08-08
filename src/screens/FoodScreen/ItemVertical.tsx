@@ -1,7 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
 import { JSX } from 'react';
 import { Image, Text, TouchableHighlight, View } from 'react-native';
 import { themeColors } from '../../constants';
-import getImageThumb from '../../utils/getImageThumb';
 import modCurrency from '../../utils/modCurrency';
 import modDistance from '../../utils/modDistance';
 
@@ -11,14 +11,14 @@ export default function ItemVertical({
   price,
   distance,
   priceBeforeDisc,
-  onPress
+  onPress,
 }: {
   imgUri: string;
   title: string;
   price?: number;
   distance?: number;
   priceBeforeDisc?: number;
-  onPress?: () => void
+  onPress?: () => void;
 }): JSX.Element {
   return (
     <TouchableHighlight
@@ -53,9 +53,7 @@ export default function ItemVertical({
               borderTopRightRadius: 10,
             }}
             resizeMode="cover"
-            source={{
-              uri: getImageThumb(imgUri, 'sm'),
-            }}
+            source={{ uri: imgUri }}
           />
         </View>
         <View
@@ -114,7 +112,7 @@ export default function ItemVertical({
                   marginHorizontal: 5,
                 }}
               >
-                {modDistance(distance)}
+                ~{modDistance(distance)}
               </Text>
             </View>
           ) : null}

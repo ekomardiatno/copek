@@ -1,7 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
 import { JSX } from "react";
 import { Image, Text, TouchableHighlight, View } from "react-native";
 import { themeColors } from "../../constants";
-import getImageThumb from "../../utils/getImageThumb";
 import modCurrency from "../../utils/modCurrency";
 import modDistance from "../../utils/modDistance";
 
@@ -48,7 +48,7 @@ export default function ItemHorizontal({
             style={{ width: '100%', height: '100%', borderRadius: 5 }}
             resizeMode="cover"
             source={{
-              uri: getImageThumb(imgUri, 'xs'),
+              uri: imgUri,
             }}
           />
         </View>

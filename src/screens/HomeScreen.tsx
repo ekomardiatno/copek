@@ -1,21 +1,15 @@
-import { JSX, useCallback, useEffect, useRef, useState } from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import { JSX, useCallback, useContext, useEffect, useState } from 'react';
 import SimpleHeader from '../components/SimpleHeader';
 import {
-  Alert,
-  Image,
-  Linking,
+  Alert, Linking,
   PermissionsAndroid,
-  PermissionStatus,
-  ScrollView,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
+  PermissionStatus, Text, TouchableOpacity,
+  View
 } from 'react-native';
 import { themeColors } from '../constants';
 import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
+  useSafeAreaInsets
 } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentLocation, setSession } from '../redux/actions/app.action';
@@ -24,28 +18,24 @@ import Menu from '../components/homeComponents/Menu';
 import Geolocation from '@react-native-community/geolocation';
 import Icon from '../components/Icon';
 import {
-  CurrentGeocodeLocationStateType,
-  CurrentLocationStateType,
+  CurrentLocationStateType
 } from '../redux/reducers/app.reducer';
+import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
 
 export default function HomeScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
-  const session = useSelector<any>(state => state?.appReducer?.session || null);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const frame = useSafeAreaFrame();
   const [permissionAndroid, setPermissionAndroid] =
     useState<PermissionStatus | null>(null);
   const [isGettingLocation, setIsGettingLocation] = useState(true);
   const location = useSelector<any>(
     state => state?.appReducer?.currentLocation || null,
   ) as CurrentLocationStateType;
-  const setLocation = (pos: CurrentLocationStateType) => {
+  const setLocation = useCallback((pos: CurrentLocationStateType) => {
     dispatch(setCurrentLocation(pos));
-  };
-  const geocode = useSelector<any>(
-    state => state?.appReducer?.currentGeocodeLocation,
-  ) as CurrentGeocodeLocationStateType;
+  }, [dispatch]);
+  const {currentGeocodeLocation: geocode} = useContext(CurrentGeocodeLocationContext);
   const route = geocode.find(r => r.types?.find(a => a === 'route'));
 
   useEffect(() => {
@@ -83,7 +73,7 @@ export default function HomeScreen(): JSX.Element {
       });
     }
     setIsGettingLocation(false);
-  }, [permissionAndroid]);
+  }, [permissionAndroid, setLocation]);
 
   const handleLogout = () => {
     dispatch(setSession(null));

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import { JSX, useCallback, useEffect, useState } from 'react';
 import {
   ScrollView,
@@ -13,9 +14,8 @@ import { themeColors } from '../constants';
 import SimpleHeader from '../components/SimpleHeader';
 import { colorYiq } from '../utils';
 import { useNavigation } from '@react-navigation/native';
-import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-import { HOST_REST_API } from '../config';
 import Icon from '../components/Icon';
+import { register } from '../services/auth-services';
 
 export default function RegisterScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
@@ -76,48 +76,43 @@ export default function RegisterScreen(): JSX.Element {
     setIsRegistering(true);
   };
 
-  const fetchRegister = useCallback(async () => {
-    if (!isRegistering) return;
-    setRegisterError(null);
-    try {
-      const payload = {
-        userName: name,
-        userPhone: phone,
-        userEmail: email,
-        userPassword: password,
-      };
-      const response = await fetch(`${HOST_REST_API}user/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to register');
-      }
-
-      const data = await response.json();
-      if (data.status !== 'OK') {
-        setRegisterError(new Error(data.message || 'Registration failed'));
-      } else {
+  const fetchRegister = useCallback(
+    async (signal: AbortSignal) => {
+      setRegisterError(null);
+      try {
+        const payload = {
+          userName: name,
+          userPhone: phone,
+          userEmail: email,
+          userPassword: password,
+        };
+        await register(signal, payload);
         navigation.goBack();
         ToastAndroid.show('Akun berhasil dibuat', ToastAndroid.SHORT);
+      } catch (e) {
+        const catchError =
+          e instanceof Error || e instanceof TypeError
+            ? e
+            : new Error('An unexpected error occurred');
+        setRegisterError(catchError);
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        setRegisterError(error);
-      } else {
-        setRegisterError(new Error('An unexpected error occurred'));
-      }
-    }
-    setIsRegistering(false);
-  }, [isRegistering, password, rePassword, name, phone, email, navigation]);
+      setIsRegistering(false);
+    },
+    [password, name, phone, email, navigation],
+  );
 
   useEffect(() => {
-    fetchRegister();
-  }, [fetchRegister]);
+    const controller = new AbortController();
+    const signal = controller.signal;
+    if (isRegistering) {
+      fetchRegister(signal);
+      return () => {
+        controller.abort();
+      };
+    } else {
+      controller.abort();
+    }
+  }, [isRegistering, fetchRegister]);
 
   return (
     <>
@@ -131,7 +126,7 @@ export default function RegisterScreen(): JSX.Element {
                 style={{
                   flexDirection: 'row',
                   borderBottomWidth: 1,
-                  borderBottomColor: inputErrors['name']
+                  borderBottomColor: inputErrors.name
                     ? themeColors.red
                     : themeColors.borderColor,
                 }}
@@ -159,11 +154,11 @@ export default function RegisterScreen(): JSX.Element {
                   }}
                 />
               </View>
-              {inputErrors['name'] && (
+              {inputErrors.name && (
                 <Text
                   style={{ color: themeColors.red, fontSize: 12, marginTop: 4 }}
                 >
-                  {inputErrors['name']}
+                  {inputErrors.name}
                 </Text>
               )}
             </View>
@@ -173,7 +168,7 @@ export default function RegisterScreen(): JSX.Element {
                 style={{
                   flexDirection: 'row',
                   borderBottomWidth: 1,
-                  borderBottomColor: inputErrors['phone']
+                  borderBottomColor: inputErrors.phone
                     ? themeColors.red
                     : themeColors.borderColor,
                 }}
@@ -206,11 +201,11 @@ export default function RegisterScreen(): JSX.Element {
                   }}
                 />
               </View>
-              {inputErrors['phone'] && (
+              {inputErrors.phone && (
                 <Text
                   style={{ color: themeColors.red, fontSize: 12, marginTop: 4 }}
                 >
-                  {inputErrors['phone']}
+                  {inputErrors.phone}
                 </Text>
               )}
             </View>
@@ -220,7 +215,7 @@ export default function RegisterScreen(): JSX.Element {
                 style={{
                   flexDirection: 'row',
                   borderBottomWidth: 1,
-                  borderBottomColor: inputErrors['email']
+                  borderBottomColor: inputErrors.email
                     ? themeColors.red
                     : themeColors.borderColor,
                 }}
@@ -249,11 +244,11 @@ export default function RegisterScreen(): JSX.Element {
                   }}
                 />
               </View>
-              {inputErrors['email'] && (
+              {inputErrors.email && (
                 <Text
                   style={{ color: themeColors.red, fontSize: 12, marginTop: 4 }}
                 >
-                  {inputErrors['email']}
+                  {inputErrors.email}
                 </Text>
               )}
             </View>
@@ -263,7 +258,7 @@ export default function RegisterScreen(): JSX.Element {
                 style={{
                   flexDirection: 'row',
                   borderBottomWidth: 1,
-                  borderBottomColor: inputErrors['password']
+                  borderBottomColor: inputErrors.password
                     ? themeColors.red
                     : themeColors.borderColor,
                 }}
@@ -318,11 +313,11 @@ export default function RegisterScreen(): JSX.Element {
                   </View>
                 </TouchableHighlight>
               </View>
-              {inputErrors['password'] && (
+              {inputErrors.password && (
                 <Text
                   style={{ color: themeColors.red, fontSize: 12, marginTop: 4 }}
                 >
-                  {inputErrors['password']}
+                  {inputErrors.password}
                 </Text>
               )}
             </View>
@@ -332,7 +327,7 @@ export default function RegisterScreen(): JSX.Element {
                 style={{
                   flexDirection: 'row',
                   borderBottomWidth: 1,
-                  borderBottomColor: inputErrors['rePassword']
+                  borderBottomColor: inputErrors.rePassword
                     ? themeColors.red
                     : themeColors.borderColor,
                 }}
@@ -387,11 +382,11 @@ export default function RegisterScreen(): JSX.Element {
                   </View>
                 </TouchableHighlight>
               </View>
-              {inputErrors['rePassword'] && (
+              {inputErrors.rePassword && (
                 <Text
                   style={{ color: themeColors.red, fontSize: 12, marginTop: 4 }}
                 >
-                  {inputErrors['rePassword']}
+                  {inputErrors.rePassword}
                 </Text>
               )}
             </View>
@@ -424,10 +419,14 @@ export default function RegisterScreen(): JSX.Element {
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: 5
+                  gap: 5,
                 }}
               >
-                <Icon name='triangle-exclamation' size={14} color={themeColors.red} />
+                <Icon
+                  name="triangle-exclamation"
+                  size={14}
+                  color={themeColors.red}
+                />
                 <Text
                   style={{
                     fontSize: 14,

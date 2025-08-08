@@ -1,11 +1,11 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
-  Image,
   ScrollView,
   Text,
   TouchableHighlight,
   TouchableOpacity,
   View,
-  TextInput,
+  TextInput
 } from 'react-native';
 import {
   useSafeAreaFrame,
@@ -18,8 +18,8 @@ import SimpleHeader from '../components/SimpleHeader';
 import { useDispatch } from 'react-redux';
 import { setSession } from '../redux/actions/app.action';
 import { useCallback, useEffect, useState } from 'react';
-import { HOST_REST_API } from '../config';
 import Icon from '../components/Icon';
+import { login } from '../services/auth-services';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -72,59 +72,57 @@ export default function LoginScreen() {
     setIsLoggingIn(true);
   };
 
-  const fetchLogin = useCallback(async () => {
-    if (!isLoggingIn) return;
-    setError(null);
-    try {
-      const payload = {
-        userPhone: phone,
-        userPassword: password,
-      };
-      const response = await fetch(`${HOST_REST_API}user/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) {
-        throw new Error('Login failed');
+  const fetchLogin = useCallback(
+    async (signal: AbortSignal) => {
+      setError(null);
+      try {
+        const payload = {
+          userPhone: phone,
+          userPassword: password,
+        };
+        const response = await login(signal, payload);
+        const user = response;
+        dispatch(
+          setSession({
+            userId: user.userId,
+            userName: user.userName,
+            userEmail: user.userEmail,
+            userPhone: user.userPhone,
+          }),
+        );
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Home' as never,
+            },
+          ],
+        });
+      } catch (e) {
+        const catchError =
+          e instanceof Error || e instanceof TypeError
+            ? e
+            : new Error('An unexpected error occurred');
+        setError(catchError);
+      } finally {
+        setIsLoggingIn(false);
       }
-      const json = await response.json();
-      if (json.status !== 'OK') {
-        throw new Error(json.message || 'Login failed');
-      }
-      const user = json.data;
-      dispatch(
-        setSession({
-          userId: user.userId,
-          userName: user.userName,
-          userEmail: user.userEmail,
-          userPhone: user.userPhone,
-        }),
-      );
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: 'Home' as never,
-          },
-        ],
-      });
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error);
-      } else {
-        setError(new Error('An unexpected error occurred'));
-      }
-    } finally {
-      setIsLoggingIn(false);
-    }
-  }, [isLoggingIn, phone, password, dispatch, navigation]);
+    },
+    [phone, password, dispatch, navigation],
+  );
 
   useEffect(() => {
-    fetchLogin();
-  }, [fetchLogin]);
+    const controller = new AbortController();
+    const signal = controller.signal;
+    if (isLoggingIn) {
+      fetchLogin(signal);
+      return () => {
+        controller.abort();
+      };
+    } else {
+      controller.abort();
+    }
+  }, [isLoggingIn, fetchLogin]);
 
   return (
     <View style={{ flex: 1, paddingBottom: insets.bottom }}>
@@ -139,16 +137,44 @@ export default function LoginScreen() {
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ alignItems: 'center', justifyContent: 'center', padding: 5, paddingLeft: 10, paddingVertical: 10, backgroundColor: themeColors.grayDark }}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 5,
+                paddingLeft: 10,
+                paddingVertical: 10,
+                backgroundColor: themeColors.grayDark,
+              }}
+            >
               <Text
-                style={{ fontSize: 48, fontWeight: 'bold', letterSpacing: 4, color: themeColors.yellow }}
+                style={{
+                  fontSize: 48,
+                  fontWeight: 'bold',
+                  letterSpacing: 4,
+                  color: themeColors.yellow,
+                }}
               >
                 CO
               </Text>
             </View>
-            <View style={{ alignItems: 'center', justifyContent: 'center', padding: 5, paddingRight: 10, paddingVertical: 10, backgroundColor: themeColors.yellow }}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 5,
+                paddingRight: 10,
+                paddingVertical: 10,
+                backgroundColor: themeColors.yellow,
+              }}
+            >
               <Text
-                style={{ fontSize: 48, fontWeight: 'bold', letterSpacing: 4, color: themeColors.grayDark }}
+                style={{
+                  fontSize: 48,
+                  fontWeight: 'bold',
+                  letterSpacing: 4,
+                  color: themeColors.grayDark,
+                }}
               >
                 PEK
               </Text>
@@ -187,7 +213,7 @@ export default function LoginScreen() {
               style={{
                 flexDirection: 'row',
                 borderBottomWidth: 1,
-                borderBottomColor: inputErrors['phone']
+                borderBottomColor: inputErrors.phone
                   ? themeColors.red
                   : themeColors.borderColor,
               }}
@@ -220,11 +246,11 @@ export default function LoginScreen() {
                 }}
               />
             </View>
-            {inputErrors['phone'] && (
+            {inputErrors.phone && (
               <Text
                 style={{ color: themeColors.red, fontSize: 12, marginTop: 4 }}
               >
-                {inputErrors['phone']}
+                {inputErrors.phone}
               </Text>
             )}
           </View>
@@ -234,7 +260,7 @@ export default function LoginScreen() {
               style={{
                 flexDirection: 'row',
                 borderBottomWidth: 1,
-                borderBottomColor: inputErrors['password']
+                borderBottomColor: inputErrors.password
                   ? themeColors.red
                   : themeColors.borderColor,
               }}
@@ -289,11 +315,11 @@ export default function LoginScreen() {
                 </View>
               </TouchableHighlight>
             </View>
-            {inputErrors['password'] && (
+            {inputErrors.password && (
               <Text
                 style={{ color: themeColors.red, fontSize: 12, marginTop: 4 }}
               >
-                {inputErrors['password']}
+                {inputErrors.password}
               </Text>
             )}
           </View>
