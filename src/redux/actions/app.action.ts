@@ -1,4 +1,4 @@
-import { CurrentLocationStateType, SessionStateType } from "../reducers/app.reducer";
+import { SimpleLocationType, SessionStateType } from "../reducers/app.reducer";
 import { SET_CURRENT_LOCATION, SET_SESSION } from "../types";
 
 export const setSession = (session: SessionStateType | null) => ({
@@ -6,7 +6,7 @@ export const setSession = (session: SessionStateType | null) => ({
   payload: session,
 });
 
-export const setCurrentLocation = (location: CurrentLocationStateType | null) => ({
+export const setCurrentLocation = (location: SimpleLocationType | null) => ({
   type: SET_CURRENT_LOCATION,
   payload: location
 })

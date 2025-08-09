@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { useSelector } from 'react-redux';
-import { CurrentLocationStateType } from '../redux/reducers/app.reducer';
+import { SimpleLocationType } from '../redux/reducers/app.reducer';
 import { getGeocode } from '../services/google-services';
 import { PlaceType } from '../types/google-map-types';
 
@@ -40,7 +40,7 @@ export default function CurrentGeocodeLocationProvider({
 }): JSX.Element {
   const location = useSelector<any>(
     state => state?.appReducer?.currentLocation || null,
-  ) as CurrentLocationStateType;
+  ) as SimpleLocationType;
   const [currentGeocodeLocation, setCurrentGeocodeLocation] = useState<
     PlaceType[]
   >([]);

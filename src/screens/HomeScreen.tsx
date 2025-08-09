@@ -13,26 +13,26 @@ import {
 } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentLocation, setSession } from '../redux/actions/app.action';
-import { useNavigation } from '@react-navigation/native';
 import Menu from '../components/homeComponents/Menu';
 import Geolocation from '@react-native-community/geolocation';
 import Icon from '../components/Icon';
 import {
-  CurrentLocationStateType
+  SimpleLocationType
 } from '../redux/reducers/app.reducer';
 import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
+import useCustomNavigation from '../hooks/useCustomNavigation';
 
 export default function HomeScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
-  const navigation = useNavigation();
+  const navigation = useCustomNavigation();
   const [permissionAndroid, setPermissionAndroid] =
     useState<PermissionStatus | null>(null);
   const [isGettingLocation, setIsGettingLocation] = useState(true);
   const location = useSelector<any>(
     state => state?.appReducer?.currentLocation || null,
-  ) as CurrentLocationStateType;
-  const setLocation = useCallback((pos: CurrentLocationStateType) => {
+  ) as SimpleLocationType;
+  const setLocation = useCallback((pos: SimpleLocationType) => {
     dispatch(setCurrentLocation(pos));
   }, [dispatch]);
   const {currentGeocodeLocation: geocode} = useContext(CurrentGeocodeLocationContext);
@@ -201,7 +201,7 @@ export default function HomeScreen(): JSX.Element {
               size={140}
               iconName="utensils"
               onPress={() => {
-                navigation.navigate('Food' as never);
+                navigation.navigate('Food');
               }}
               color={themeColors.red}
               disabled={location === null || isGettingLocation}

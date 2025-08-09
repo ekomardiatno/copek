@@ -13,13 +13,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
 import SimpleHeader from '../components/SimpleHeader';
 import { colorYiq } from '../utils';
-import { useNavigation } from '@react-navigation/native';
 import Icon from '../components/Icon';
 import { register } from '../services/auth-services';
+import useCustomNavigation from '../hooks/useCustomNavigation';
 
 export default function RegisterScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
+  const navigation = useCustomNavigation();
   const [isRegistering, setIsRegistering] = useState(false);
   const [registerError, setRegisterError] = useState<Error | TypeError | null>(
     null,

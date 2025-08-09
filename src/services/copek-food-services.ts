@@ -30,11 +30,12 @@ export const searchFood = async (
     latitude: number;
     longitude: number;
   },
-  page: number,
+  page?: number,
+  orderBy?: 'nearest' | 'rand',
   signal?: AbortSignal,
 ): Promise<FoodType[]> => {
   const response = await fetch(
-    `${WEB_API_URL}food/get?cari=${search}&koordinat=${position.latitude},${position.longitude}&orderby=nearest&kota=${cityName}&page=${page}`,
+    `${WEB_API_URL}food/get?cari=${search}&koordinat=${position.latitude},${position.longitude}&orderby=${orderBy || 'nearest'}&kota=${cityName}&page=${page || 1}`,
     {
       signal,
     },

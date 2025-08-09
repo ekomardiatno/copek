@@ -9,7 +9,7 @@ import ItemContainer from './ItemContainer';
 import ItemVertical from './ItemVertical';
 import ItemHorizontal from './ItemHorizontal';
 import { useSelector } from 'react-redux';
-import { CurrentLocationStateType } from '../../redux/reducers/app.reducer';
+import { SimpleLocationType } from '../../redux/reducers/app.reducer';
 import { getFoodHomeCollection } from '../../services/copek-food-services';
 import {
   FoodCollectionType,
@@ -19,14 +19,14 @@ import {
 import Spinner from '../../components/Spinner';
 import getImageThumb from '../../utils/getImageThumb';
 import { CurrentGeocodeLocationContext } from '../../components/CurrentGeocodeLocationProvider';
-import { useNavigation } from '@react-navigation/native';
+import useCustomNavigation from '../../hooks/useCustomNavigation';
 
 export default function FoodScreen(): JSX.Element {
-  const navigation = useNavigation();
+  const navigation = useCustomNavigation();
   const insets = useSafeAreaInsets();
   const currentLocation = useSelector<any>(
     state => state?.appReducer?.currentLocation,
-  ) as CurrentLocationStateType | null;
+  ) as SimpleLocationType | null;
   const { currentGeocodeLocation: geocode } = useContext(
     CurrentGeocodeLocationContext,
   );
@@ -44,6 +44,7 @@ export default function FoodScreen(): JSX.Element {
       if (!isLoadingCollection) return;
       if (!currentLocation) return;
       if (!cityName) return;
+      console.log(signal);
       setCollectionRequestError(null);
       try {
         const result = await getFoodHomeCollection(
@@ -104,7 +105,7 @@ export default function FoodScreen(): JSX.Element {
         style={{ borderRadius: 10, marginHorizontal: 15, marginBottom: 20 }}
         activeOpacity={0.85}
         onPress={() => {
-          navigation.navigate('SearchMenu' as never);
+          navigation.navigate('SearchMenu');
         }}
       >
         <View
@@ -202,6 +203,15 @@ export default function FoodScreen(): JSX.Element {
                     marginTop: i === 0 ? 0 : 20,
                     marginHorizontal: -20,
                   }}
+                  onSeeMore={() => {
+                    if(row.category === 'food') {
+                      navigation.navigate('List Menu', {
+                        params: {
+                          moreCategory: row.more
+                        }
+                      })
+                    }
+                  }}
                 >
                   <View
                     style={{
@@ -255,6 +265,15 @@ export default function FoodScreen(): JSX.Element {
                   title={row.title[0]}
                   subTitle={row.title[1]}
                   containerStyle={{ marginHorizontal: -20, marginTop: 20 }}
+                  onSeeMore={() => {
+                    if (row.category === 'food') {
+                      navigation.navigate('List Menu', {
+                        params: {
+                          moreCategory: row.more,
+                        },
+                      });
+                    }
+                  }}
                 >
                   <View style={{ gap: 10, marginHorizontal: 20 }}>
                     {row.data.map((item, j) => {

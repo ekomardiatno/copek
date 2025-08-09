@@ -13,16 +13,16 @@ import {
 } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
 import { colorYiq } from '../utils';
-import { useNavigation } from '@react-navigation/native';
 import SimpleHeader from '../components/SimpleHeader';
 import { useDispatch } from 'react-redux';
 import { setSession } from '../redux/actions/app.action';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Icon from '../components/Icon';
 import { login } from '../services/auth-services';
+import customUseNavigation from '../hooks/useCustomNavigation';
 
 export default function LoginScreen() {
-  const navigation = useNavigation();
+  const navigation = customUseNavigation();
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
   const [phone, setPhone] = useState('');
@@ -372,7 +372,7 @@ export default function LoginScreen() {
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => {
-            navigation.navigate('Register' as never);
+            navigation.navigate('Register');
           }}
         >
           <View style={{ flexDirection: 'row' }}>

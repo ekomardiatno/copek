@@ -10,14 +10,14 @@ export type SessionStateType = {
   userPhone: string;
 };
 
-export type CurrentLocationStateType = {
+export type SimpleLocationType = {
   latitude: number;
   longitude: number;
 };
 
 const initialState: {
   session: SessionStateType | null;
-  currentLocation: CurrentLocationStateType | null;
+  currentLocation: SimpleLocationType | null;
 } = {
   session: null,
   currentLocation: null,

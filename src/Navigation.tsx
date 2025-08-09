@@ -8,8 +8,21 @@ import HomeScreen from "./screens/HomeScreen";
 import SplashScreen from "./screens/SplashScreen";
 import FoodScreen from "./screens/FoodScreen";
 import SearchMenuScreen from "./screens/SearchMenuScreen";
+import ListMenuScreen from "./screens/ListMenuScreen";
 
 const Stack = createNativeStackNavigator();
+
+export type RootStackParamList = {
+  Splash: undefined; // with params
+  Login: undefined; // no params
+  Register: undefined; // no params
+  Home: undefined; // no params
+  Food: undefined; // no params
+  SearchMenu: undefined; // no params
+  'List Menu': {
+    params?: { moreCategory: 'rand' | 'nearest' };
+  };
+};
 
 function RootStack() {
   return (
@@ -60,6 +73,13 @@ function RootStack() {
         name="SearchMenu"
         component={SearchMenuScreen}
       />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="List Menu"
+        component={ListMenuScreen}
+      />
     </Stack.Navigator>
   );
 }
@@ -88,4 +108,11 @@ export default function Navigation(): JSX.Element {
       <RootStack />
     </NavigationContainer>
   );
+}
+
+// Add type helper for `useNavigation`
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
 }

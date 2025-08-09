@@ -56,7 +56,7 @@ export default function ItemHorizontal({
             style={{
               position: 'absolute',
               top: 5,
-              left: 10.5,
+              left: -5,
               width: 55,
               height: 24,
             }}

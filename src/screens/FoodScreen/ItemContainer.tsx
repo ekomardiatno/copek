@@ -1,4 +1,5 @@
-import { JSX, ReactNode } from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import { JSX } from 'react';
 import { ScrollView, StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { themeColors } from '../../constants';
 

@@ -1,10 +1,10 @@
+/* eslint-disable react-native/no-inline-styles */
 import { JSX } from 'react';
 import { StatusBar, Text, TouchableHighlight, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
-import { useNavigation } from '@react-navigation/native';
-import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 import Icon from './Icon';
+import useCustomNavigation from '../hooks/useCustomNavigation';
 
 export default function SimpleHeader({
   title,
@@ -14,7 +14,7 @@ export default function SimpleHeader({
   disableBack?: boolean;
 }): JSX.Element {
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
+  const navigation = useCustomNavigation();
   return (
     <>
       <StatusBar barStyle="dark-content" />

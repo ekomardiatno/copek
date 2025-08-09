@@ -7,32 +7,34 @@ import {
   useRef,
   useState,
 } from 'react';
-import { ScrollView, Text, TouchableHighlight, View } from 'react-native';
+import { Text, TouchableHighlight, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
 import Input from '../components/Input';
 import { searchFood } from '../services/copek-food-services';
 import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
 import { useSelector } from 'react-redux';
-import { CurrentLocationStateType } from '../redux/reducers/app.reducer';
+import { SimpleLocationType } from '../redux/reducers/app.reducer';
 import { FoodType } from '../types/food-collection-types';
 import ItemHorizontal from './FoodScreen/ItemHorizontal';
 import getImageThumb from '../utils/getImageThumb';
 import Spinner from '../components/Spinner';
 import Icon from '../components/Icon';
 import SimpleHeader from '../components/SimpleHeader';
+import InfiniteScroll from '../components/InfiniteScroll';
 export default function SearchMenuScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
   const { cityName } = useContext(CurrentGeocodeLocationContext);
   const currentLocation = useSelector<any>(
     state => state?.appReducer?.currentLocation,
-  ) as CurrentLocationStateType | null;
+  ) as SimpleLocationType | null;
   const timeoutFetch = useRef<NodeJS.Timeout | null>(null);
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [data, setData] = useState<FoodType[]>([]);
   const [error, setError] = useState<Error | TypeError | null>(null);
+  const [isAllLoaded, setIsAllLoadedEnd] = useState<boolean>(false);
 
   const handleSearch = (text: string) => {
     if (timeoutFetch.current) clearTimeout(timeoutFetch.current);
@@ -44,6 +46,8 @@ export default function SearchMenuScreen(): JSX.Element {
       timeoutFetch.current = setTimeout(() => {
         setLoading(true);
         setPage(1);
+        setIsAllLoadedEnd(false);
+        setData([]);
       }, 800);
     } else {
       setLoading(false);
@@ -52,6 +56,10 @@ export default function SearchMenuScreen(): JSX.Element {
 
   const fetchSearch = useCallback(
     async (signal?: AbortSignal) => {
+      if (isAllLoaded) {
+        setLoading(false);
+        return;
+      }
       if (!loading) return;
       if (!currentLocation) return;
       if (!cityName) return;
@@ -62,10 +70,15 @@ export default function SearchMenuScreen(): JSX.Element {
           cityName,
           currentLocation,
           page,
+          'nearest',
           signal,
         );
-        console.log(result);
-        setData(result);
+        if (result.length === 0) {
+          setIsAllLoadedEnd(true);
+        } else {
+          setPage(p => p + 1);
+        }
+        setData(prev => [...prev, ...result]);
       } catch (e) {
         const catchError =
           e instanceof Error || e instanceof TypeError
@@ -76,9 +89,9 @@ export default function SearchMenuScreen(): JSX.Element {
         setLoading(false);
       }
     },
-    [cityName, search, currentLocation, page, loading],
+    [cityName, search, currentLocation, page, loading, isAllLoaded],
   );
-  
+
   const abortController = useRef<AbortController | null>(null);
   useEffect(() => {
     abortController.current = new AbortController();
@@ -149,8 +162,12 @@ export default function SearchMenuScreen(): JSX.Element {
           </TouchableHighlight>
         </View>
       ) : (
-        <ScrollView>
-          <View style={{ gap: 20, paddingHorizontal: 20 }}>
+        <InfiniteScroll
+          loading={loading}
+          onLoading={() => setLoading(true)}
+          hasReachedBottom={isAllLoaded}
+        >
+          <View style={{ gap: 20, paddingHorizontal: 20, paddingBottom: 20 }}>
             {data.map((item, i) => {
               return (
                 <ItemHorizontal
@@ -171,7 +188,7 @@ export default function SearchMenuScreen(): JSX.Element {
               );
             })}
           </View>
-        </ScrollView>
+        </InfiniteScroll>
       )}
     </View>
   );
