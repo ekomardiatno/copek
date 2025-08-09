@@ -22,8 +22,12 @@ import getImageThumb from '../utils/getImageThumb';
 import LoadingBase from '../components/LoadingBase';
 import ErrorBase from '../components/ErrorBase';
 import useAppSelector from '../hooks/useAppSelector';
+import { useRoute } from '@react-navigation/native';
+import { AppRouteProp } from '../types/navigation';
 
 export default function ListMenuScreen(): JSX.Element {
+  const route = useRoute<AppRouteProp<'List Menu'>>()
+  const params = route.params.params
   const insets = useSafeAreaInsets();
   const [hasReachedBottom, setHasReachedBottom] = useState(false);
   const { cityName } = useContext(CurrentGeocodeLocationContext);
@@ -51,7 +55,7 @@ export default function ListMenuScreen(): JSX.Element {
           cityName,
           currentLocation,
           page,
-          'rand',
+          params?.moreCategory,
           signal,
         );
         if (result.length === 0) {
@@ -67,7 +71,7 @@ export default function ListMenuScreen(): JSX.Element {
         setLoading(false);
       }
     },
-    [hasReachedBottom, currentLocation, cityName, loading, page],
+    [hasReachedBottom, currentLocation, cityName, loading, page, params],
   );
 
   const abortController = useRef<AbortController | null>(null);

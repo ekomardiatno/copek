@@ -14,8 +14,12 @@ import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocat
 import { SimpleLocationType } from '../redux/reducers/app.reducer';
 import parsingError from '../utils/parsingError';
 import useAppSelector from '../hooks/useAppSelector';
+import { useRoute } from '@react-navigation/native';
+import { AppRouteProp } from '../types/navigation';
 
 export default function ListMerchantScreen(): JSX.Element {
+  const route = useRoute<AppRouteProp<'List Menu'>>()
+  const params = route.params.params
   const { cityName } = useContext(CurrentGeocodeLocationContext);
   const currentLocation = useAppSelector<SimpleLocationType | null>(
     state => state.appReducer.currentLocation,
@@ -27,39 +31,39 @@ export default function ListMerchantScreen(): JSX.Element {
   const [page, setPage] = useState(1);
 
   const fetchMerchant = useCallback(
-      async (signal?: AbortSignal) => {
-        if (hasReachedBottom) {
-          setLoading(false);
-          return;
+    async (signal?: AbortSignal) => {
+      if (hasReachedBottom) {
+        setLoading(false);
+        return;
+      }
+      if (!currentLocation) return;
+      if (!cityName) return;
+      if (!loading) return;
+      setError(null);
+      try {
+        const result = await searchMerchant(
+          '',
+          cityName,
+          currentLocation,
+          page,
+          params?.moreCategory,
+          signal,
+        );
+        if (result.length === 0) {
+          setHasReachedBottom(true);
+        } else {
+          setPage(p => p + 1);
         }
-        if (!currentLocation) return;
-        if (!cityName) return;
-        if (!loading) return;
-        setError(null);
-        try {
-          const result = await searchMerchant(
-            '',
-            cityName,
-            currentLocation,
-            page,
-            'rand',
-            signal,
-          );
-          if (result.length === 0) {
-            setHasReachedBottom(true);
-          } else {
-            setPage(p => p + 1);
-          }
-          setData(prev => [...prev, ...result]);
-        } catch (e) {
-          const parsedError = parsingError(e);
-          setError(parsedError);
-        } finally {
-          setLoading(false);
-        }
-      },
-      [hasReachedBottom, currentLocation, cityName, loading, page],
-    );
+        setData(prev => [...prev, ...result]);
+      } catch (e) {
+        const parsedError = parsingError(e);
+        setError(parsedError);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [hasReachedBottom, currentLocation, cityName, loading, page, params],
+  );
   
     const abortController = useRef<AbortController | null>(null);
     useEffect(() => {
