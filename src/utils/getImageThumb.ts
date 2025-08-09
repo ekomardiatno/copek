@@ -1,4 +1,4 @@
-import { HOST_WEB_APP } from "../config";
+import { WEB_APP_HOST } from "../config";
 
 const getImageThumb = (file: string, size: 'lg'|'md'|'sm'|'xs'|'xxs') => {
   let modifiedSize = ''
@@ -29,7 +29,7 @@ const getImageThumb = (file: string, size: 'lg'|'md'|'sm'|'xs'|'xxs') => {
     thumb += modifiedFile[i] + (indexEnd === i ? '' : '/');
   }
 
-  return `${HOST_WEB_APP}${thumb.at(0) === '/' ? thumb.substring(1) : thumb}`;
+  return `${WEB_APP_HOST}${thumb.at(0) === '/' ? thumb.substring(1) : thumb}`;
 };
 
 export default getImageThumb;

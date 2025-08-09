@@ -1,4 +1,4 @@
-import { HOST_REST_API } from '../config';
+import { WEB_API_URL } from '../config';
 
 export const login = async (
   signal: AbortSignal,
@@ -12,7 +12,7 @@ export const login = async (
   userPhone: string;
   userEmail: string;
 }> => {
-  const response = await fetch(`${HOST_REST_API}user/login`, {
+  const response = await fetch(`${WEB_API_URL}user/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export const register = async (
     userPassword: string;
   },
 ): Promise<any> => {
-  const response = await fetch(`${HOST_REST_API}user/register`, {
+  const response = await fetch(`${WEB_API_URL}user/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

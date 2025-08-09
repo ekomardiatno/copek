@@ -1,4 +1,4 @@
-import { HOST_REST_API } from "../config";
+import { WEB_API_URL } from "../config";
 import { FoodCollectionType, FoodType } from "../types/food-collection-types";
 
 export const getFoodHomeCollection = async (signal: AbortSignal, city: string, location: {
@@ -6,7 +6,7 @@ export const getFoodHomeCollection = async (signal: AbortSignal, city: string, l
   longitude: number
 }): Promise<FoodCollectionType[]> => {
   const response = await fetch(
-    `${HOST_REST_API}food/collection?kota=${city}&koordinat=${location.latitude},${location.longitude}`, {
+    `${WEB_API_URL}food/collection?kota=${city}&koordinat=${location.latitude},${location.longitude}`, {
       signal
     }
   );
@@ -23,7 +23,7 @@ export const searchFood = async (signal: AbortSignal, search: string, cityName: 
   longitude: number;
 }, page: number): Promise<FoodType[]> => {
   const response = await fetch(
-    `${HOST_REST_API}food/get?cari=${search}&koordinat=${position.latitude},${position.longitude}&orderby=nearest&kota=${cityName}&page=${page}`, {
+    `${WEB_API_URL}food/get?cari=${search}&koordinat=${position.latitude},${position.longitude}&orderby=nearest&kota=${cityName}&page=${page}`, {
       signal
     }
   );
