@@ -11,7 +11,7 @@ import { themeColors } from '../constants';
 import {
   useSafeAreaInsets
 } from 'react-native-safe-area-context';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setCurrentLocation, setSession } from '../redux/actions/app.action';
 import Menu from '../components/homeComponents/Menu';
 import Geolocation from '@react-native-community/geolocation';
@@ -21,6 +21,7 @@ import {
 } from '../redux/reducers/app.reducer';
 import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
 import useCustomNavigation from '../hooks/useCustomNavigation';
+import useAppSelector from '../hooks/useAppSelector';
 
 export default function HomeScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
@@ -29,9 +30,9 @@ export default function HomeScreen(): JSX.Element {
   const [permissionAndroid, setPermissionAndroid] =
     useState<PermissionStatus | null>(null);
   const [isGettingLocation, setIsGettingLocation] = useState(true);
-  const location = useSelector<any>(
-    state => state?.appReducer?.currentLocation || null,
-  ) as SimpleLocationType;
+  const location = useAppSelector<SimpleLocationType | null>(
+    state => state.appReducer.currentLocation,
+  );
   const setLocation = useCallback((pos: SimpleLocationType) => {
     dispatch(setCurrentLocation(pos));
   }, [dispatch]);

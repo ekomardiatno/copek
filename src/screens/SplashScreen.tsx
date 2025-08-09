@@ -1,12 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
 import { JSX, useEffect } from 'react';
 import { View } from 'react-native';
-import { useSelector } from 'react-redux';
 import useCustomNavigation from '../hooks/useCustomNavigation';
+import useAppSelector from '../hooks/useAppSelector';
+import { SessionStateType } from '../redux/reducers/app.reducer';
 
 export default function SplashScreen(): JSX.Element {
   const navigation = useCustomNavigation();
-  const session = useSelector<any>(state => state?.appReducer?.session || null);
+  const session = useAppSelector<SessionStateType | null>(
+    state => state.appReducer.session,
+  );
 
   useEffect(() => {
     if (session) {

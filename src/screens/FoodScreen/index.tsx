@@ -1,14 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
-import { JSX, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import {
+  JSX,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { ScrollView, Text, TouchableHighlight, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SimpleHeader from '../../components/SimpleHeader';
 import { themeColors } from '../../constants';
 import Icon from '../../components/Icon';
-import ItemContainer from './ItemContainer';
-import ItemVertical from './ItemVertical';
-import ItemHorizontal from './ItemHorizontal';
-import { useSelector } from 'react-redux';
+import ItemContainer from '../../components/ItemContainer';
+import ItemVertical from '../../components/ItemVertical';
+import ItemHorizontal from '../../components/ItemHorizontal';
 import { SimpleLocationType } from '../../redux/reducers/app.reducer';
 import { getFoodHomeCollection } from '../../services/copek-food-services';
 import {
@@ -20,13 +26,14 @@ import Spinner from '../../components/Spinner';
 import getImageThumb from '../../utils/getImageThumb';
 import { CurrentGeocodeLocationContext } from '../../components/CurrentGeocodeLocationProvider';
 import useCustomNavigation from '../../hooks/useCustomNavigation';
+import useAppSelector from '../../hooks/useAppSelector';
 
 export default function FoodScreen(): JSX.Element {
   const navigation = useCustomNavigation();
   const insets = useSafeAreaInsets();
-  const currentLocation = useSelector<any>(
-    state => state?.appReducer?.currentLocation,
-  ) as SimpleLocationType | null;
+  const currentLocation = useAppSelector<SimpleLocationType | null>(
+    state => state.appReducer.currentLocation,
+  )
   const { currentGeocodeLocation: geocode } = useContext(
     CurrentGeocodeLocationContext,
   );
@@ -65,7 +72,7 @@ export default function FoodScreen(): JSX.Element {
     },
     [cityName, currentLocation, isLoadingCollection],
   );
-    
+
   const abortController = useRef<AbortController | null>(null);
   useEffect(() => {
     abortController.current = new AbortController();
@@ -204,13 +211,14 @@ export default function FoodScreen(): JSX.Element {
                     marginHorizontal: -20,
                   }}
                   onSeeMore={() => {
-                    if(row.category === 'food') {
-                      navigation.navigate('List Menu', {
+                    navigation.navigate(
+                      row.category === 'food' ? 'List Menu' : 'List Merchant',
+                      {
                         params: {
-                          moreCategory: row.more
-                        }
-                      })
-                    }
+                          moreCategory: row.more,
+                        },
+                      },
+                    );
                   }}
                 >
                   <View
@@ -266,13 +274,14 @@ export default function FoodScreen(): JSX.Element {
                   subTitle={row.title[1]}
                   containerStyle={{ marginHorizontal: -20, marginTop: 20 }}
                   onSeeMore={() => {
-                    if (row.category === 'food') {
-                      navigation.navigate('List Menu', {
+                    navigation.navigate(
+                      row.category === 'food' ? 'List Menu' : 'List Merchant',
+                      {
                         params: {
                           moreCategory: row.more,
                         },
-                      });
-                    }
+                      },
+                    );
                   }}
                 >
                   <View style={{ gap: 10, marginHorizontal: 20 }}>

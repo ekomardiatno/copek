@@ -15,22 +15,22 @@ import InfiniteScroll from '../components/InfiniteScroll';
 import { FoodType } from '../types/food-collection-types';
 import parsingError from '../utils/parsingError';
 import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
-import { useSelector } from 'react-redux';
 import { SimpleLocationType } from '../redux/reducers/app.reducer';
 import { searchFood } from '../services/copek-food-services';
-import ItemHorizontal from './FoodScreen/ItemHorizontal';
+import ItemHorizontal from '../components/ItemHorizontal';
 import getImageThumb from '../utils/getImageThumb';
 import LoadingBase from '../components/LoadingBase';
 import ErrorBase from '../components/ErrorBase';
+import useAppSelector from '../hooks/useAppSelector';
 
 export default function ListMenuScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
   const [hasReachedBottom, setHasReachedBottom] = useState(false);
   const { cityName } = useContext(CurrentGeocodeLocationContext);
-  const currentLocation = useSelector<any>(
-    state => state?.appReducer?.currentLocation,
-  ) as SimpleLocationType | null;
-  const [loading, setLoading] = useState(false);
+  const currentLocation = useAppSelector<SimpleLocationType | null>(
+    state => state.appReducer.currentLocation,
+  );
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<TypeError | Error | null>(null);
   const [data, setData] = useState<FoodType[]>([]);
   const [page, setPage] = useState(1);
@@ -96,25 +96,27 @@ export default function ListMenuScreen(): JSX.Element {
           onLoading={() => setLoading(true)}
           hasReachedBottom={hasReachedBottom}
         >
-          {data.map((item, i) => {
-            return (
-              <ItemHorizontal
-                key={i}
-                imgUri={getImageThumb(item.foodPicture, 'xs')}
-                title={item.foodName}
-                subTitle={item.merchantName}
-                price={
-                  Number(item.foodPrice) -
-                  (Number(item.foodDiscount) / 100) * Number(item.foodPrice)
-                }
-                priceBeforeDisc={
-                  Number(item.foodDiscount) > 0
-                    ? Number(item.foodPrice)
-                    : undefined
-                }
-              />
-            );
-          })}
+          <View style={{ paddingBottom: 20, paddingHorizontal: 20, gap: 20, paddingTop: 10 }}>
+            {data.map((item, i) => {
+              return (
+                <ItemHorizontal
+                  key={i}
+                  imgUri={getImageThumb(item.foodPicture, 'xs')}
+                  title={item.foodName}
+                  subTitle={item.merchantName}
+                  price={
+                    Number(item.foodPrice) -
+                    (Number(item.foodDiscount) / 100) * Number(item.foodPrice)
+                  }
+                  priceBeforeDisc={
+                    Number(item.foodDiscount) > 0
+                      ? Number(item.foodPrice)
+                      : undefined
+                  }
+                />
+              );
+            })}
+          </View>
         </InfiniteScroll>
       )}
     </View>

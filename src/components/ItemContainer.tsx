@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import { JSX } from 'react';
 import { ScrollView, StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { themeColors } from '../../constants';
+import { themeColors } from '../constants';
 
 export default function ItemContainer({
   title,
@@ -40,7 +40,7 @@ export default function ItemContainer({
             >
               {title}
             </Text>
-            {subTitle && <Text numberOfLines={1}>{subTitle}</Text>}
+            {subTitle && <Text numberOfLines={1} style={{ color: themeColors.textMuted }}>{subTitle}</Text>}
           </View>
           {onSeeMore && (
             <View>

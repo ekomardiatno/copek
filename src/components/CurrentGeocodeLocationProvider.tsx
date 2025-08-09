@@ -6,10 +6,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useSelector } from 'react-redux';
 import { SimpleLocationType } from '../redux/reducers/app.reducer';
 import { getGeocode } from '../services/google-services';
 import { PlaceType } from '../types/google-map-types';
+import useAppSelector from '../hooks/useAppSelector';
 
 export const CurrentGeocodeLocationContext = createContext<{
   currentGeocodeLocation: PlaceType[];
@@ -38,9 +38,7 @@ export default function CurrentGeocodeLocationProvider({
 }: {
   children: JSX.Element;
 }): JSX.Element {
-  const location = useSelector<any>(
-    state => state?.appReducer?.currentLocation || null,
-  ) as SimpleLocationType;
+  const location = useAppSelector<SimpleLocationType | null>(state => state.appReducer.currentLocation);
   const [currentGeocodeLocation, setCurrentGeocodeLocation] = useState<
     PlaceType[]
   >([]);

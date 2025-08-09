@@ -13,21 +13,21 @@ import { themeColors } from '../constants';
 import Input from '../components/Input';
 import { searchFood } from '../services/copek-food-services';
 import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
-import { useSelector } from 'react-redux';
 import { SimpleLocationType } from '../redux/reducers/app.reducer';
 import { FoodType } from '../types/food-collection-types';
-import ItemHorizontal from './FoodScreen/ItemHorizontal';
+import ItemHorizontal from '../components/ItemHorizontal';
 import getImageThumb from '../utils/getImageThumb';
 import Spinner from '../components/Spinner';
 import Icon from '../components/Icon';
 import SimpleHeader from '../components/SimpleHeader';
 import InfiniteScroll from '../components/InfiniteScroll';
+import useAppSelector from '../hooks/useAppSelector';
 export default function SearchMenuScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
   const { cityName } = useContext(CurrentGeocodeLocationContext);
-  const currentLocation = useSelector<any>(
-    state => state?.appReducer?.currentLocation,
-  ) as SimpleLocationType | null;
+  const currentLocation = useAppSelector<SimpleLocationType | null>(
+    state => state.appReducer.currentLocation,
+  );
   const timeoutFetch = useRef<NodeJS.Timeout | null>(null);
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);

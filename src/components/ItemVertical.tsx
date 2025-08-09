@@ -1,14 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import { JSX } from 'react';
 import { Image, Text, TouchableHighlight, View } from 'react-native';
-import { themeColors } from '../../constants';
-import modCurrency from '../../utils/modCurrency';
-import modDistance from '../../utils/modDistance';
+import { themeColors } from '../constants';
+import modCurrency from '../utils/modCurrency';
+import modDistance from '../utils/modDistance';
 
-export default function ItemHorizontal({
+export default function ItemVertical({
   imgUri,
   title,
-  subTitle,
   price,
   distance,
   priceBeforeDisc,
@@ -16,7 +15,6 @@ export default function ItemHorizontal({
 }: {
   imgUri: string;
   title: string;
-  subTitle: string;
   price?: number;
   distance?: number;
   priceBeforeDisc?: number;
@@ -27,71 +25,59 @@ export default function ItemHorizontal({
       activeOpacity={0.85}
       underlayColor="#fff"
       onPress={onPress}
+      style={{ borderRadius: 10 }}
     >
       <View
         style={{
-          flexDirection: 'row',
-          position: 'relative',
+          borderRadius: 10,
+          overflow: 'hidden',
+          width: 140,
+          marginBottom: 2,
+          backgroundColor: themeColors.white,
         }}
       >
         <View
           style={{
-            width: 80,
-            height: 80,
+            width: '100%',
+            height: 120,
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: themeColors.grayLighter,
           }}
         >
           <Image
-            style={{ width: '100%', height: '100%', borderRadius: 5 }}
-            resizeMode="cover"
-            source={{
-              uri: imgUri,
+            style={{
+              width: '100%',
+              height: '100%',
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
             }}
+            resizeMode="cover"
+            source={{ uri: imgUri }}
           />
         </View>
-        {price && priceBeforeDisc && (
-          <View
-            style={{
-              position: 'absolute',
-              top: 5,
-              left: -5,
-              width: 55,
-              height: 24,
-            }}
-          >
-            <Image
-              resizeMode="contain"
-              style={{ width: '100%', height: '100%' }}
-              source={require('../../assets/images/ribbon.png')}
-            />
-          </View>
-        )}
-        <View style={{ paddingLeft: 10, flex: 1 }}>
+        <View
+          style={{
+            padding: 8,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderWidth: 1,
+            borderColor: themeColors.borderColor,
+            borderTopWidth: 0,
+            flex: 1,
+          }}
+        >
           <Text
+            numberOfLines={2}
             style={{
               fontWeight: 'bold',
+              marginBottom: 6,
               color: themeColors.grayDark,
-              fontSize: 15,
-              marginBottom: 2,
             }}
           >
             {title}
           </Text>
-          {subTitle && (
-            <Text
-              numberOfLines={1}
-              style={{
-                marginBottom: 8,
-                fontSize: 13,
-                color: themeColors.grayDark,
-              }}
-            >
-              {subTitle}
-            </Text>
-          )}
-          {price && (
+          {price ? (
             <View style={{ flexDirection: 'row', marginHorizontal: -5 }}>
               <Text
                 style={{
@@ -117,8 +103,7 @@ export default function ItemHorizontal({
                 </Text>
               )}
             </View>
-          )}
-          {distance && (
+          ) : distance ? (
             <View style={{ flexDirection: 'row', marginHorizontal: -5 }}>
               <Text
                 style={{
@@ -130,7 +115,7 @@ export default function ItemHorizontal({
                 ~{modDistance(distance)}
               </Text>
             </View>
-          )}
+          ) : null}
         </View>
       </View>
     </TouchableHighlight>

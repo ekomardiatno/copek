@@ -9,6 +9,7 @@ import SplashScreen from "./screens/SplashScreen";
 import FoodScreen from "./screens/FoodScreen";
 import SearchMenuScreen from "./screens/SearchMenuScreen";
 import ListMenuScreen from "./screens/ListMenuScreen";
+import ListMerchantScreen from "./screens/ListMerchantScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,9 @@ export type RootStackParamList = {
   'List Menu': {
     params?: { moreCategory: 'rand' | 'nearest' };
   };
+  'List Merchant': {
+    params?: { moreCategory: 'rand' | 'nearest' }
+  }
 };
 
 function RootStack() {
@@ -79,6 +83,13 @@ function RootStack() {
         }}
         name="List Menu"
         component={ListMenuScreen}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="List Merchant"
+        component={ListMerchantScreen}
       />
     </Stack.Navigator>
   );
