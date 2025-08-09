@@ -1,11 +1,11 @@
 import { WEB_API_URL } from '../config';
 
 export const login = async (
-  signal: AbortSignal,
   payload: {
     userPhone: string;
     userPassword: string;
   },
+  signal?: AbortSignal
 ): Promise<{
   userId: string;
   userName: string;
@@ -32,13 +32,13 @@ export const login = async (
 };
 
 export const register = async (
-  signal: AbortSignal,
   payload: {
     userName: string;
     userPhone: string;
     userEmail: string;
     userPassword: string;
   },
+  signal?: AbortSignal,
 ): Promise<any> => {
   const response = await fetch(`${WEB_API_URL}user/register`, {
     method: 'POST',

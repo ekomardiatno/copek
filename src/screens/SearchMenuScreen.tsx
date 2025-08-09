@@ -3,8 +3,9 @@ import {
   JSX,
   useCallback,
   useContext,
-  useEffect, useRef,
-  useState
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 import { ScrollView, Text, TouchableHighlight, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -50,18 +51,18 @@ export default function SearchMenuScreen(): JSX.Element {
   }, [search]);
 
   const fetchSearch = useCallback(
-    async (signal: AbortSignal) => {
+    async (signal?: AbortSignal) => {
       if (!loading) return;
       if (!currentLocation) return;
       if (!cityName) return;
       setError(null);
       try {
         const result = await searchFood(
-          signal,
           search,
           cityName,
           currentLocation,
           page,
+          signal,
         );
         console.log(result);
         setData(result);
@@ -77,14 +78,18 @@ export default function SearchMenuScreen(): JSX.Element {
     },
     [cityName, search, currentLocation, page, loading],
   );
+  
+  const abortController = useRef<AbortController | null>(null);
+  useEffect(() => {
+    abortController.current = new AbortController();
+    return () => {
+      abortController.current?.abort();
+    };
+  }, []);
 
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
+    const signal = abortController.current?.signal;
     fetchSearch(signal);
-    return () => {
-      controller.abort();
-    };
   }, [fetchSearch]);
 
   return (

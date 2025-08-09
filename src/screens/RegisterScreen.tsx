@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { JSX, useCallback, useEffect, useState } from 'react';
+import { JSX, useCallback, useEffect, useRef, useState } from 'react';
 import {
   ScrollView,
   Text,
@@ -77,7 +77,7 @@ export default function RegisterScreen(): JSX.Element {
   };
 
   const fetchRegister = useCallback(
-    async (signal: AbortSignal) => {
+    async (signal?: AbortSignal) => {
       if (!isRegistering) return;
       setRegisterError(null);
       try {
@@ -87,7 +87,7 @@ export default function RegisterScreen(): JSX.Element {
           userEmail: email,
           userPassword: password,
         };
-        await register(signal, payload);
+        await register(payload, signal);
         navigation.goBack();
         ToastAndroid.show('Akun berhasil dibuat', ToastAndroid.SHORT);
       } catch (e) {
@@ -101,14 +101,18 @@ export default function RegisterScreen(): JSX.Element {
     },
     [password, name, phone, email, navigation, isRegistering],
   );
+  
+  const abortController = useRef<AbortController | null>(null);
+  useEffect(() => {
+    abortController.current = new AbortController();
+    return () => {
+      abortController.current?.abort();
+    };
+  }, []);
 
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
+    const signal = abortController.current?.signal;
     fetchRegister(signal);
-    return () => {
-      controller.abort();
-    };
   }, [fetchRegister]);
 
   return (

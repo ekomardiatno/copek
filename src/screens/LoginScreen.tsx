@@ -17,7 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import SimpleHeader from '../components/SimpleHeader';
 import { useDispatch } from 'react-redux';
 import { setSession } from '../redux/actions/app.action';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Icon from '../components/Icon';
 import { login } from '../services/auth-services';
 
@@ -73,7 +73,7 @@ export default function LoginScreen() {
   };
 
   const fetchLogin = useCallback(
-    async (signal: AbortSignal) => {
+    async (signal?: AbortSignal) => {
       if (!isLoggingIn) return;
       setError(null);
       try {
@@ -81,7 +81,7 @@ export default function LoginScreen() {
           userPhone: phone,
           userPassword: password,
         };
-        const response = await login(signal, payload);
+        const response = await login(payload, signal);
         const user = response;
         dispatch(
           setSession({
@@ -112,13 +112,17 @@ export default function LoginScreen() {
     [phone, password, dispatch, navigation, isLoggingIn],
   );
 
+  const abortController = useRef<AbortController | null>(null);
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetchLogin(signal);
+    abortController.current = new AbortController();
     return () => {
-      controller.abort();
+      abortController.current?.abort();
     };
+  }, []);
+
+  useEffect(() => {
+    const signal = abortController.current?.signal;
+    fetchLogin(signal);
   }, [fetchLogin]);
 
   return (

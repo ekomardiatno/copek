@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { JSX, useCallback, useContext, useEffect, useState } from 'react';
+import { JSX, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { ScrollView, Text, TouchableHighlight, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SimpleHeader from '../../components/SimpleHeader';
@@ -40,16 +40,16 @@ export default function FoodScreen(): JSX.Element {
   );
 
   const fetchCollection = useCallback(
-    async (signal: AbortSignal) => {
+    async (signal?: AbortSignal) => {
       if (!isLoadingCollection) return;
       if (!currentLocation) return;
       if (!cityName) return;
       setCollectionRequestError(null);
       try {
         const result = await getFoodHomeCollection(
-          signal,
           cityName,
           currentLocation,
+          signal,
         );
         setFoodCollection(result);
       } catch (e) {
@@ -64,14 +64,18 @@ export default function FoodScreen(): JSX.Element {
     },
     [cityName, currentLocation, isLoadingCollection],
   );
+    
+  const abortController = useRef<AbortController | null>(null);
+  useEffect(() => {
+    abortController.current = new AbortController();
+    return () => {
+      abortController.current?.abort();
+    };
+  }, []);
 
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
+    const signal = abortController.current?.signal;
     fetchCollection(signal);
-    return () => {
-      controller.abort();
-    };
   }, [fetchCollection]);
 
   useEffect(() => {

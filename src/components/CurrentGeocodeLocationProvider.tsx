@@ -3,6 +3,7 @@ import React, {
   JSX,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { useSelector } from 'react-redux';
@@ -58,11 +59,11 @@ export default function CurrentGeocodeLocationProvider({
   }, [location]);
 
   const fetchGeocode = useCallback(
-    async (signal: AbortSignal) => {
+    async (signal?: AbortSignal) => {
       if (!loadingCurrentGeocodeLocation) return null;
       setCurrentGeocodeLocationRequestError(null);
       try {
-        const response = await getGeocode(signal, location);
+        const response = await getGeocode(location, signal);
         setCurrentGeocodeLocation(response);
       } catch (e) {
         if (e instanceof Error || e instanceof TypeError) {
@@ -79,13 +80,17 @@ export default function CurrentGeocodeLocationProvider({
     [location, loadingCurrentGeocodeLocation],
   );
 
+  const abortController = useRef<AbortController | null>(null);
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetchGeocode(signal);
+    abortController.current = new AbortController();
     return () => {
-      controller.abort();
+      abortController.current?.abort();
     };
+  }, []);
+
+  useEffect(() => {
+    const signal = abortController.current?.signal;
+    fetchGeocode(signal);
   }, [fetchGeocode]);
 
   useEffect(() => {
