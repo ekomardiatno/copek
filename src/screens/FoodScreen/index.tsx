@@ -25,11 +25,11 @@ import {
 import Spinner from '../../components/Spinner';
 import getImageThumb from '../../utils/getImageThumb';
 import { CurrentGeocodeLocationContext } from '../../components/CurrentGeocodeLocationProvider';
-import useCustomNavigation from '../../hooks/useCustomNavigation';
+import useAppNavigation from '../../hooks/useAppNavigation';
 import useAppSelector from '../../hooks/useAppSelector';
 
 export default function FoodScreen(): JSX.Element {
-  const navigation = useCustomNavigation();
+  const navigation = useAppNavigation();
   const insets = useSafeAreaInsets();
   const currentLocation = useAppSelector<SimpleLocationType | null>(
     state => state.appReducer.currentLocation,

@@ -20,13 +20,13 @@ import {
   SimpleLocationType
 } from '../redux/reducers/app.reducer';
 import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
-import useCustomNavigation from '../hooks/useCustomNavigation';
+import useAppNavigation from '../hooks/useAppNavigation';
 import useAppSelector from '../hooks/useAppSelector';
 
 export default function HomeScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
-  const navigation = useCustomNavigation();
+  const navigation = useAppNavigation();
   const [permissionAndroid, setPermissionAndroid] =
     useState<PermissionStatus | null>(null);
   const [isGettingLocation, setIsGettingLocation] = useState(true);

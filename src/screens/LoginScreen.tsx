@@ -19,7 +19,7 @@ import { setSession } from '../redux/actions/app.action';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Icon from '../components/Icon';
 import { login } from '../services/auth-services';
-import customUseNavigation from '../hooks/useCustomNavigation';
+import customUseNavigation from '../hooks/useAppNavigation';
 
 export default function LoginScreen() {
   const navigation = customUseNavigation();

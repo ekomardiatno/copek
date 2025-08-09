@@ -4,7 +4,7 @@ import { StatusBar, Text, TouchableHighlight, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
 import Icon from './Icon';
-import useCustomNavigation from '../hooks/useCustomNavigation';
+import useAppNavigation from '../hooks/useAppNavigation';
 
 export default function SimpleHeader({
   title,
@@ -14,7 +14,7 @@ export default function SimpleHeader({
   disableBack?: boolean;
 }): JSX.Element {
   const insets = useSafeAreaInsets();
-  const navigation = useCustomNavigation();
+  const navigation = useAppNavigation();
   return (
     <>
       <StatusBar barStyle="dark-content" />

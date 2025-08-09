@@ -15,11 +15,11 @@ import SimpleHeader from '../components/SimpleHeader';
 import { colorYiq } from '../utils';
 import Icon from '../components/Icon';
 import { register } from '../services/auth-services';
-import useCustomNavigation from '../hooks/useCustomNavigation';
+import useAppNavigation from '../hooks/useAppNavigation';
 
 export default function RegisterScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
-  const navigation = useCustomNavigation();
+  const navigation = useAppNavigation();
   const [isRegistering, setIsRegistering] = useState(false);
   const [registerError, setRegisterError] = useState<Error | TypeError | null>(
     null,

@@ -38,7 +38,9 @@ export default function CurrentGeocodeLocationProvider({
 }: {
   children: JSX.Element;
 }): JSX.Element {
-  const location = useAppSelector<SimpleLocationType | null>(state => state.appReducer.currentLocation);
+  const location = useAppSelector<SimpleLocationType | null>(
+    state => state.appReducer.currentLocation,
+  );
   const [currentGeocodeLocation, setCurrentGeocodeLocation] = useState<
     PlaceType[]
   >([]);
@@ -58,7 +60,8 @@ export default function CurrentGeocodeLocationProvider({
 
   const fetchGeocode = useCallback(
     async (signal?: AbortSignal) => {
-      if (!loadingCurrentGeocodeLocation) return null;
+      if (!loadingCurrentGeocodeLocation) return;
+      if (!location) return;
       setCurrentGeocodeLocationRequestError(null);
       try {
         const response = await getGeocode(location, signal);

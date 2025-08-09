@@ -66,7 +66,43 @@ export const searchMerchant = async (
     },
   );
   if (!response.ok) {
-    throw new Error('Failed to load food');
+    throw new Error('Failed to load merchant');
+  }
+
+  const json = await response.json();
+  return json;
+};
+
+export const getMerchantDetail = async (
+  merchantId?: number | string,
+  signal?: AbortSignal,
+): Promise<MerchantType[]> => {
+  const response = await fetch(
+    `${WEB_API_URL}merchant/${merchantId}`,
+    {
+      signal,
+    },
+  );
+  if (!response.ok) {
+    throw new Error('Failed to load merchant detail');
+  }
+
+  const json = await response.json();
+  return json;
+};
+
+export const getFoodByMerchant = async (
+  merchantId?: number | string,
+  signal?: AbortSignal,
+): Promise<MerchantType[]> => {
+  const response = await fetch(
+    `${WEB_API_URL}food/${merchantId}`,
+    {
+      signal,
+    },
+  );
+  if (!response.ok) {
+    throw new Error('Failed to load food of the merchant');
   }
 
   const json = await response.json();
