@@ -27,6 +27,7 @@ export default function SimpleHeader({
           marginHorizontal: -5,
           paddingTop: insets.top + (!title ? 0 : 10),
           backgroundColor: themeColors.white,
+          alignItems: 'center',
         }}
       >
         {title && navigation.canGoBack() && (
@@ -34,24 +35,26 @@ export default function SimpleHeader({
             <Pressable
               onPress={() => navigation.goBack()}
               disabled={disableBack}
-              style={{
-                height: 40,
-                marginHorizontal: 5,
-                width: 40,
-                borderRadius: 40 / 2,
-                overflow: 'hidden',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
             >
-              <Icon size={18} name={'chevron-left'} />
+              <View
+                style={{
+                  height: 40,
+                  marginHorizontal: 5,
+                  width: 40,
+                  borderRadius: 40 / 2,
+                  overflow: 'hidden',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Icon size={18} name={'chevron-left'} />
+              </View>
             </Pressable>
           </View>
         )}
         {title && (
           <View
             style={{
-              flex: 1,
               marginHorizontal: 5,
               justifyContent: 'center',
               height: 40,

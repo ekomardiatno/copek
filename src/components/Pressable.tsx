@@ -1,5 +1,9 @@
-import { JSX } from 'react';
-import { TouchableHighlight, TouchableHighlightProps } from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import React, { JSX } from 'react';
+import {
+  TouchableHighlight,
+  TouchableHighlightProps
+} from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 
 export default function Pressable({
@@ -9,6 +13,7 @@ export default function Pressable({
   underlayColor,
   activeOpacity,
   activeScale = 0.98,
+  style,
   ...props
 }: TouchableHighlightProps & {
   activeScale?: number;
@@ -17,6 +22,7 @@ export default function Pressable({
   return (
     <TouchableHighlight
       {...props}
+      style={[style]}
       activeOpacity={activeOpacity || 1}
       underlayColor={underlayColor || 'transparent'}
       onPressIn={e => {
@@ -32,7 +38,7 @@ export default function Pressable({
         if (onPressOut) onPressOut(e);
       }}
     >
-      <Animated.View style={{ transform: [{ scale }] }}>
+      <Animated.View style={{ transform: [{ scale }], flexGrow: 1 }}>
         {children}
       </Animated.View>
     </TouchableHighlight>

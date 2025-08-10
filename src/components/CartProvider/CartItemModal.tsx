@@ -160,6 +160,7 @@ export default function CartItemModal(): JSX.Element {
                   onPress={() => {
                     handleChangeQty('subtract');
                   }}
+                  style={{ width: 28, height: 28 }}
                 >
                   <View
                     style={{
@@ -204,6 +205,7 @@ export default function CartItemModal(): JSX.Element {
                   onPress={() => {
                     handleChangeQty('add');
                   }}
+                  style={{ width: 28, height: 28 }}
                 >
                   <View
                     style={{

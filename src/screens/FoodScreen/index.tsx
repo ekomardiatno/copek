@@ -49,8 +49,9 @@ export default function FoodScreen(): JSX.Element {
   const [foodCollection, setFoodCollection] = useState<FoodCollectionType[]>(
     [],
   );
-  const lastScrollY = useSharedValue(0)
-  const {showProccedToCheckoutButton, hideProccedToCheckoutButton} = useContext(CartContext)
+  const lastScrollY = useSharedValue(0);
+  const { showProccedToCheckoutButton, hideProccedToCheckoutButton } =
+    useContext(CartContext);
 
   const fetchCollection = useCallback(
     async (signal?: AbortSignal) => {
@@ -119,7 +120,11 @@ export default function FoodScreen(): JSX.Element {
           navigation.navigate('SearchMenu');
         }}
       >
-        <Input iconName='magnifying-glass' placeholder='Mau makan apa hari ini?' readOnly />
+        <Input
+          iconName="magnifying-glass"
+          placeholder="Mau makan apa hari ini?"
+          readOnly
+        />
       </Pressable>
       {isLoadingCollection ? (
         <View
@@ -168,16 +173,16 @@ export default function FoodScreen(): JSX.Element {
             paddingVertical: 20,
           }}
           onScrollEndDrag={e => {
-            if(e.nativeEvent.contentOffset.y > lastScrollY.value) {
-              hideProccedToCheckoutButton()
+            if (e.nativeEvent.contentOffset.y > lastScrollY.value) {
+              hideProccedToCheckoutButton();
             } else {
-              showProccedToCheckoutButton()
+              showProccedToCheckoutButton();
             }
           }}
           onMomentumScrollEnd={e => {
-            lastScrollY.set(e.nativeEvent.contentOffset.y)
-            if(e.nativeEvent.contentOffset.y === 0) {
-              showProccedToCheckoutButton()
+            lastScrollY.set(e.nativeEvent.contentOffset.y);
+            if (e.nativeEvent.contentOffset.y === 0) {
+              showProccedToCheckoutButton();
             }
           }}
         >
@@ -233,7 +238,7 @@ export default function FoodScreen(): JSX.Element {
                               navigation.navigate('Merchant', {
                                 params: {
                                   merchantId: foodItem.merchantId,
-                                  foodId: foodItem.foodId
+                                  foodId: foodItem.foodId,
                                 },
                               });
                             }}
@@ -253,7 +258,7 @@ export default function FoodScreen(): JSX.Element {
                             onPress={() => {
                               navigation.navigate('Merchant', {
                                 params: {
-                                  merchantId: merchant.merchantId
+                                  merchantId: merchant.merchantId,
                                 },
                               });
                             }}
@@ -306,7 +311,7 @@ export default function FoodScreen(): JSX.Element {
                               navigation.navigate('Merchant', {
                                 params: {
                                   merchantId: foodItem.merchantId,
-                                  foodId: foodItem.foodId
+                                  foodId: foodItem.foodId,
                                 },
                               });
                             }}
@@ -327,7 +332,7 @@ export default function FoodScreen(): JSX.Element {
                             onPress={() => {
                               navigation.navigate('Merchant', {
                                 params: {
-                                  merchantId: merchantItem.merchantId
+                                  merchantId: merchantItem.merchantId,
                                 },
                               });
                             }}

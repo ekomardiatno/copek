@@ -27,6 +27,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
+  withSpring
 } from 'react-native-reanimated';
 import Icon from '../components/Icon';
 import { themeColors } from '../constants';
@@ -174,16 +175,7 @@ export default function MerchantScreen(): JSX.Element {
     };
   });
 
-  const heightThumbnail = useAnimatedStyle(() => {
-    return {
-      height: interpolate(
-        scrollY.value,
-        [0, 190],
-        [heightImg, insets.top + 60],
-        Extrapolation.CLAMP,
-      ),
-    };
-  });
+  const heightThumbnail = useSharedValue(heightImg)
 
   if (isMerchantLoading)
     return <LoadingBase onCancel={() => navigation.goBack()} />;
@@ -292,8 +284,8 @@ export default function MerchantScreen(): JSX.Element {
             left: 0,
             right: 0,
             backgroundColor: '#333',
-          },
-          heightThumbnail,
+            height: heightThumbnail
+          }
         ]}
       >
         <View style={{ flex: 1, overflow: 'hidden' }}>
@@ -381,7 +373,12 @@ export default function MerchantScreen(): JSX.Element {
       ) : (
         <Animated.ScrollView
           onScroll={e => {
-            scrollY.set(e.nativeEvent.contentOffset.y);
+            scrollY.value = withSpring(e.nativeEvent.contentOffset.y);
+            if(e.nativeEvent.contentOffset.y >= 190) {
+              heightThumbnail.value = withSpring(insets.top + 60)
+            } else {
+              heightThumbnail.value = withSpring(heightImg)
+            }
           }}
           onScrollEndDrag={e => {
             if (e.nativeEvent.contentOffset.y > lastScrollY.value) {

@@ -24,16 +24,18 @@ export default function ItemVertical({
   return (
     <Pressable
       onPress={onPress}
+      style={{ flex: 1 }}
     >
-      <View
-        style={{
-          borderRadius: 10,
-          overflow: 'hidden',
-          width: 140,
-          marginBottom: 2,
-          backgroundColor: themeColors.white,
-        }}
-      >
+      <View style={{
+        borderRadius: 10,
+        overflow: 'hidden',
+        width: 140,
+        marginBottom: 2,
+        backgroundColor: themeColors.white,
+        borderWidth: 1,
+        borderColor: themeColors.borderColor,
+        flex: 1
+      }}>
         <View
           style={{
             width: '100%',
@@ -57,10 +59,6 @@ export default function ItemVertical({
         <View
           style={{
             padding: 8,
-            borderBottomLeftRadius: 10,
-            borderBottomRightRadius: 10,
-            borderWidth: 1,
-            borderColor: themeColors.borderColor,
             borderTopWidth: 0,
             flex: 1,
           }}

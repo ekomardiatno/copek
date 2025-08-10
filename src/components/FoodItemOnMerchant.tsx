@@ -372,9 +372,9 @@ export default function FoodItemOnMerchant({
         >
           <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <Icon
-              name="circle-exclamation"
+              name="shop"
               size={80}
-              color={themeColors.blue}
+              color={themeColors.primary}
             />
           </View>
           <Text
