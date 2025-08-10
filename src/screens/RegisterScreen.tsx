@@ -1,11 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
-import {
-  ScrollView,
-  Text,
-  TextInput,
-  ToastAndroid, View
-} from 'react-native';
+import { ScrollView, Text, TextInput, ToastAndroid, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
 import SimpleHeader from '../components/SimpleHeader';
@@ -107,7 +102,7 @@ export default function RegisterScreen(): JSX.Element {
     },
     [password, name, phone, email, navigation, isRegistering],
   );
-  
+
   const abortController = useRef<AbortController | null>(null);
   useEffect(() => {
     abortController.current = new AbortController();
@@ -455,6 +450,7 @@ export default function RegisterScreen(): JSX.Element {
         >
           <Pressable
             onPress={() => navigation.goBack()}
+            viewStyle={{ flexGrow: 0 }}
           >
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ fontSize: 13 }}>Sudah punya akun? </Text>

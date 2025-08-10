@@ -336,6 +336,7 @@ export default function LoginScreen() {
           onPress={() => {
             navigation.navigate('Register');
           }}
+          viewStyle={{ flexGrow: 0 }}
         >
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 13 }}>Tidak punya akun? </Text>
