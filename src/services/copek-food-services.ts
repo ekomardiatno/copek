@@ -1,5 +1,6 @@
 import { WEB_API_URL } from "../config";
-import { FoodCollectionType, FoodType, MerchantType } from "../types/food-collection-types";
+import { FoodCollectionType, FoodMerchantType, FoodType } from "../types/food-collection-types";
+import { MerchantDetailsType, MerchantType } from "../types/merchant-types";
 
 export const getFoodHomeCollection = async (
   city: string,
@@ -76,7 +77,7 @@ export const searchMerchant = async (
 export const getMerchantDetail = async (
   merchantId?: number | string,
   signal?: AbortSignal,
-): Promise<MerchantType[]> => {
+): Promise<MerchantDetailsType> => {
   const response = await fetch(
     `${WEB_API_URL}merchant/${merchantId}`,
     {
@@ -94,13 +95,10 @@ export const getMerchantDetail = async (
 export const getFoodByMerchant = async (
   merchantId?: number | string,
   signal?: AbortSignal,
-): Promise<MerchantType[]> => {
-  const response = await fetch(
-    `${WEB_API_URL}food/${merchantId}`,
-    {
-      signal,
-    },
-  );
+): Promise<FoodMerchantType[]> => {
+  const response = await fetch(`${WEB_API_URL}food/${merchantId}`, {
+    signal,
+  });
   if (!response.ok) {
     throw new Error('Failed to load food of the merchant');
   }

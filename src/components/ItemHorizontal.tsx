@@ -1,9 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import { JSX } from 'react';
-import { Image, Text, TouchableHighlight, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { themeColors } from '../constants';
 import modCurrency from '../utils/modCurrency';
 import modDistance from '../utils/modDistance';
+import Pressable from './Pressable';
 
 export default function ItemHorizontal({
   imgUri,
@@ -23,9 +24,7 @@ export default function ItemHorizontal({
   onPress?: () => void;
 }): JSX.Element {
   return (
-    <TouchableHighlight
-      activeOpacity={0.85}
-      underlayColor="#fff"
+    <Pressable
       onPress={onPress}
     >
       <View
@@ -133,6 +132,6 @@ export default function ItemHorizontal({
           )}
         </View>
       </View>
-    </TouchableHighlight>
+    </Pressable>
   );
 }

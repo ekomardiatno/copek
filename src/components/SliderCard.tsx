@@ -1,16 +1,16 @@
+/* eslint-disable react-native/no-inline-styles */
 import { JSX, useEffect, useRef, useState } from 'react';
 import {
   Image,
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
-  StyleProp,
-  TouchableHighlight,
-  View,
-  ViewStyle,
+  StyleProp, View,
+  ViewStyle
 } from 'react-native';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
+import Pressable from './Pressable';
 
 export default function SliderCard({
   containerStyle,
@@ -34,7 +34,7 @@ export default function SliderCard({
     if (items.length > 0 && play) {
       autoScroll.current = setInterval(() => {
         setSelectedIndex(prev => {
-          const next = prev == items.length - 1 ? 0 : prev + 1;
+          const next = prev === items.length - 1 ? 0 : prev + 1;
           if (scrollRef.current) {
             scrollRef.current.scrollTo({
               animated: true,
@@ -49,7 +49,7 @@ export default function SliderCard({
         if (autoScroll.current) clearInterval(autoScroll.current);
       };
     }
-  }, [items, play]);
+  }, [items, play, width]);
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetX = event.nativeEvent.contentOffset.x;
@@ -83,20 +83,19 @@ export default function SliderCard({
         {items.map((item, index) => {
           let margin = {};
 
-          if (index == 0) {
+          if (index === 0) {
             margin = {
               marginLeft: 15,
             };
-          } else if (index == items.length - 1) {
+          } else if (index === items.length - 1) {
             margin = {
               marginRight: 15,
             };
           }
           return (
-            <TouchableHighlight
+            <Pressable
               key={index}
               onPress={item.onPress}
-              underlayColor="rgba(0,0,0,.25)"
               style={{ borderRadius: 8, width, height, marginHorizontal: 5, ...margin }}
             >
               <View
@@ -119,7 +118,7 @@ export default function SliderCard({
                   source={{ uri: item.imgUri }}
                 />
               </View>
-            </TouchableHighlight>
+            </Pressable>
           );
         })}
       </ScrollView>
@@ -141,15 +140,15 @@ export default function SliderCard({
                 width: 12,
                 height: 12,
                 borderRadius: 6,
-                marginLeft: i == 0 ? 0 : 5,
+                marginLeft: i === 0 ? 0 : 5,
                 borderWidth: 2,
                 borderColor:
-                  selectedIndex == i
+                  selectedIndex === i
                     ? themeColors.primary
                     : themeColors.grayLighter,
                 marginHorizontal: 5,
                 backgroundColor:
-                  selectedIndex == i
+                  selectedIndex === i
                     ? themeColors.primary
                     : themeColors.grayLight,
               }}

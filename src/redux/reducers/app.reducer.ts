@@ -32,12 +32,12 @@ const appReducer = (
     case SET_SESSION:
       return {
         ...state,
-        session: payload,
+        session: payload as SessionStateType | null,
       };
     case SET_CURRENT_LOCATION:
       return {
         ...state,
-        currentLocation: payload,
+        currentLocation: payload as SimpleLocationType | null,
       };
     default:
       return state;

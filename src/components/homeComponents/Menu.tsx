@@ -1,10 +1,11 @@
+/* eslint-disable react-native/no-inline-styles */
 import { JSX } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import { Text, View } from 'react-native';
 import { themeColors } from '../../constants';
 import { colorYiq } from '../../utils';
 import Icon from '../Icon';
 import { FontAwesome6SolidIconName } from '@react-native-vector-icons/fontawesome6';
+import Pressable from '../Pressable';
 
 export default function Menu({
   onPress,
@@ -21,11 +22,9 @@ export default function Menu({
   size?: number;
   disabled?: boolean;
 }): JSX.Element {
-  const { width } = useSafeAreaFrame();
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
-      activeOpacity={1}
       style={{ padding: 15 }}
       disabled={disabled}
     >
@@ -59,6 +58,6 @@ export default function Menu({
           </Text>
         </Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }

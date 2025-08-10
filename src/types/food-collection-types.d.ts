@@ -1,13 +1,4 @@
-export type MerchantType = {
-  merchantId: string;
-  merchantName: string;
-  merchantLatitude: string | number;
-  merchantLongitude: string | number;
-  merchantAddress: string;
-  merchantDetails: string;
-  merchantPicture: string;
-  merchantDistance: string | number;
-};
+import { MerchantType } from './merchant-types';
 
 export type FoodType = {
   foodId: string;
@@ -28,4 +19,16 @@ export type FoodCollectionType = {
   more: 'rand' | 'nearest';
   category: 'merchant' | 'food';
   data: (MerchantType & FoodType)[];
+};
+
+export type FoodMerchantType = {
+  foodId: string;
+  merchantId: string;
+  foodPicture: string;
+  foodName: string;
+  foodPrice: string | number;
+  foodDiscount: string | number;
+  foodDetails: string;
+  is_deleted: '0' | '1';
+  is_active: '0' | '1';
 };

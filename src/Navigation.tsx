@@ -1,15 +1,17 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { JSX } from "react";
-import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterScreen";
-import { themeColors } from "./constants";
-import { NavigationContainer } from "@react-navigation/native";
-import HomeScreen from "./screens/HomeScreen";
-import SplashScreen from "./screens/SplashScreen";
-import FoodScreen from "./screens/FoodScreen";
-import SearchMenuScreen from "./screens/SearchMenuScreen";
-import ListMenuScreen from "./screens/ListMenuScreen";
-import ListMerchantScreen from "./screens/ListMerchantScreen";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { JSX } from 'react';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import { themeColors } from './constants';
+import { NavigationContainer } from '@react-navigation/native';
+import HomeScreen from './screens/HomeScreen';
+import SplashScreen from './screens/SplashScreen';
+import FoodScreen from './screens/FoodScreen';
+import SearchMenuScreen from './screens/SearchMenuScreen';
+import ListMenuScreen from './screens/ListMenuScreen';
+import ListMerchantScreen from './screens/ListMerchantScreen';
+import MerchantScreen from './screens/MerchantScreen';
+import BaseProvider from './components/BaseProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,8 +26,14 @@ export type RootStackParamList = {
     params?: { moreCategory: 'rand' | 'nearest' };
   };
   'List Merchant': {
-    params?: { moreCategory: 'rand' | 'nearest' }
-  }
+    params?: { moreCategory: 'rand' | 'nearest' };
+  };
+  Merchant: {
+    params?: {
+      merchantId: string;
+      foodId?: string;
+    };
+  };
 };
 
 function RootStack() {
@@ -41,6 +49,7 @@ function RootStack() {
         }}
         name="Splash"
         component={SplashScreen}
+        layout={BaseProvider}
       />
       <Stack.Screen
         options={{
@@ -48,6 +57,7 @@ function RootStack() {
         }}
         name="Login"
         component={LoginScreen}
+        layout={BaseProvider}
       />
       <Stack.Screen
         options={{
@@ -55,6 +65,7 @@ function RootStack() {
         }}
         name="Register"
         component={RegisterScreen}
+        layout={BaseProvider}
       />
       <Stack.Screen
         options={{
@@ -62,6 +73,7 @@ function RootStack() {
         }}
         name="Home"
         component={HomeScreen}
+        layout={BaseProvider}
       />
       <Stack.Screen
         options={{
@@ -69,6 +81,7 @@ function RootStack() {
         }}
         name="Food"
         component={FoodScreen}
+        layout={BaseProvider}
       />
       <Stack.Screen
         options={{
@@ -76,6 +89,7 @@ function RootStack() {
         }}
         name="SearchMenu"
         component={SearchMenuScreen}
+        layout={BaseProvider}
       />
       <Stack.Screen
         options={{
@@ -83,6 +97,7 @@ function RootStack() {
         }}
         name="List Menu"
         component={ListMenuScreen}
+        layout={BaseProvider}
       />
       <Stack.Screen
         options={{
@@ -90,6 +105,15 @@ function RootStack() {
         }}
         name="List Merchant"
         component={ListMerchantScreen}
+        layout={BaseProvider}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="Merchant"
+        component={MerchantScreen}
+        layout={BaseProvider}
       />
     </Stack.Navigator>
   );

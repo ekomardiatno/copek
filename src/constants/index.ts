@@ -1,28 +1,29 @@
 const colors = {
-  black: '#2f2f2f',
-  white: '#fff',
-  grayLighter: '#f5f5f5',
-  grayLight: '#efefef',
-  gray: '#7e7e7e',
-  grayDark: '#353940',
-  blue: '#394dbd',
-  yellow: '#ffd71d',
-  green: '#2c9e6d',
-  purple: '#96339c',
-  pink: '#bd3f9c',
-  teal: '#24b4ce',
-  cean: '#38d8ad',
-  red: '#d23454'
-}
+  black: '#030712',
+  white: '#f9fafb',
+  grayLighter: '#f3f4f6',
+  grayLight: '#d1d5db',
+  gray: '#4b5563',
+  grayDark: '#374151',
+  grayDarker: '#1f2937',
+  blue: '#1d4ed8',
+  yellow: '#a16207',
+  green: '#15803d',
+  purple: '#7e22ce',
+  pink: '#be185d',
+  teal: '#0f766e',
+  cyan: '#0e7490',
+  red: '#b91c1c',
+};
 
 export const themeColors = {
   ...colors,
-  primary: colors.yellow,
-  secondary: '#a78f27',
+  primary: colors.blue,
+  secondary: colors.yellow,
   textColor: colors.black,
-  textMuted: '#8a8a8a',
-  borderColor: '#eee',
-  borderColorGray: '#ddd'
-}
+  textMuted: '#374151',
+  borderColor: '#e5e7eb',
+  borderColorGray: '#9ca3af',
+};
 
 export const REDUX_KEY_NAME = 'copekReduxPersist'

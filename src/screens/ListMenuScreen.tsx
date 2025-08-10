@@ -24,11 +24,13 @@ import ErrorBase from '../components/ErrorBase';
 import useAppSelector from '../hooks/useAppSelector';
 import { useRoute } from '@react-navigation/native';
 import { AppRouteProp } from '../types/navigation';
+import useAppNavigation from '../hooks/useAppNavigation';
 
 export default function ListMenuScreen(): JSX.Element {
   const route = useRoute<AppRouteProp<'List Menu'>>()
   const params = route.params.params
   const insets = useSafeAreaInsets();
+  const navigation = useAppNavigation()
   const [hasReachedBottom, setHasReachedBottom] = useState(false);
   const { cityName } = useContext(CurrentGeocodeLocationContext);
   const currentLocation = useAppSelector<SimpleLocationType | null>(
@@ -117,6 +119,14 @@ export default function ListMenuScreen(): JSX.Element {
                       ? Number(item.foodPrice)
                       : undefined
                   }
+                  onPress={() => {
+                    navigation.navigate('Merchant', {
+                      params: {
+                        foodId: item.foodId,
+                        merchantId: item.merchantId
+                      }
+                    })
+                  }}
                 />
               );
             })}

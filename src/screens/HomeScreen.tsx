@@ -4,8 +4,7 @@ import SimpleHeader from '../components/SimpleHeader';
 import {
   Alert, Linking,
   PermissionsAndroid,
-  PermissionStatus, Text, TouchableOpacity,
-  View
+  PermissionStatus, Text, View
 } from 'react-native';
 import { themeColors } from '../constants';
 import {
@@ -22,6 +21,7 @@ import {
 import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
 import useAppNavigation from '../hooks/useAppNavigation';
 import useAppSelector from '../hooks/useAppSelector';
+import Pressable from '../components/Pressable';
 
 export default function HomeScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
@@ -155,7 +155,7 @@ export default function HomeScreen(): JSX.Element {
                   : `${location?.latitude}, ${location?.longitude}`}
               </Text>
             </View>
-            <TouchableOpacity onPress={handleLogout}>
+            <Pressable onPress={handleLogout}>
               <View
                 style={{
                   height: 38,
@@ -170,7 +170,7 @@ export default function HomeScreen(): JSX.Element {
               >
                 <Icon name="user" color={themeColors.textColor} size={18} />
               </View>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
         <View

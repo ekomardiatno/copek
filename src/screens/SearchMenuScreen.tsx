@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Text, TouchableHighlight, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
 import Input from '../components/Input';
@@ -22,12 +22,15 @@ import Icon from '../components/Icon';
 import SimpleHeader from '../components/SimpleHeader';
 import InfiniteScroll from '../components/InfiniteScroll';
 import useAppSelector from '../hooks/useAppSelector';
+import useAppNavigation from '../hooks/useAppNavigation';
+import Pressable from '../components/Pressable';
 export default function SearchMenuScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
   const { cityName } = useContext(CurrentGeocodeLocationContext);
   const currentLocation = useAppSelector<SimpleLocationType | null>(
     state => state.appReducer.currentLocation,
   );
+  const navigation = useAppNavigation();
   const timeoutFetch = useRef<NodeJS.Timeout | null>(null);
   const [search, setSearch] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -111,7 +114,7 @@ export default function SearchMenuScreen(): JSX.Element {
       <View
         style={{
           backgroundColor: themeColors.white,
-          paddingBottom: 20,
+          paddingBottom: 15,
           marginHorizontal: 20,
         }}
       >
@@ -146,7 +149,7 @@ export default function SearchMenuScreen(): JSX.Element {
           <Text style={{ fontWeight: 'bold' }}>
             {error?.message || 'Terjadi kesalahan'}
           </Text>
-          <TouchableHighlight onPress={() => setLoading(true)}>
+          <Pressable onPress={() => setLoading(true)}>
             <View
               style={{
                 padding: 10,
@@ -159,7 +162,7 @@ export default function SearchMenuScreen(): JSX.Element {
                 Coba lagi
               </Text>
             </View>
-          </TouchableHighlight>
+          </Pressable>
         </View>
       ) : (
         <InfiniteScroll
@@ -184,6 +187,14 @@ export default function SearchMenuScreen(): JSX.Element {
                       ? Number(item.foodPrice)
                       : undefined
                   }
+                  onPress={() => {
+                    navigation.navigate('Merchant', {
+                      params: {
+                        merchantId: item.merchantId,
+                        foodId: item.foodId,
+                      },
+                    });
+                  }}
                 />
               );
             })}

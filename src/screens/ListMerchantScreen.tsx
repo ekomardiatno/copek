@@ -7,7 +7,6 @@ import InfiniteScroll from '../components/InfiniteScroll';
 import LoadingBase from '../components/LoadingBase';
 import ErrorBase from '../components/ErrorBase';
 import ItemHorizontal from '../components/ItemHorizontal';
-import { MerchantType } from '../types/food-collection-types';
 import getImageThumb from '../utils/getImageThumb';
 import { searchMerchant } from '../services/copek-food-services';
 import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
@@ -16,9 +15,12 @@ import parsingError from '../utils/parsingError';
 import useAppSelector from '../hooks/useAppSelector';
 import { useRoute } from '@react-navigation/native';
 import { AppRouteProp } from '../types/navigation';
+import { MerchantType } from '../types/merchant-types';
+import useAppNavigation from '../hooks/useAppNavigation';
 
 export default function ListMerchantScreen(): JSX.Element {
   const route = useRoute<AppRouteProp<'List Menu'>>()
+  const navigation = useAppNavigation();
   const params = route.params.params
   const { cityName } = useContext(CurrentGeocodeLocationContext);
   const currentLocation = useAppSelector<SimpleLocationType | null>(
@@ -107,6 +109,13 @@ export default function ListMerchantScreen(): JSX.Element {
                     title={item.merchantName}
                     subTitle={item.merchantDetails}
                     distance={Number(item.merchantDistance)}
+                    onPress={() => {
+                      navigation.navigate('Merchant', {
+                        params: {
+                          merchantId: item.merchantId
+                        }
+                      })
+                    }}
                   />
                 );
               })}

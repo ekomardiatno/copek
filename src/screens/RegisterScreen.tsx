@@ -4,10 +4,7 @@ import {
   ScrollView,
   Text,
   TextInput,
-  ToastAndroid,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
+  ToastAndroid, View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
@@ -16,6 +13,8 @@ import { colorYiq } from '../utils';
 import Icon from '../components/Icon';
 import { register } from '../services/auth-services';
 import useAppNavigation from '../hooks/useAppNavigation';
+import Pressable from '../components/Pressable';
+import { emailRegex, phoneRegex } from '../utils/regex';
 
 export default function RegisterScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
@@ -66,10 +65,17 @@ export default function RegisterScreen(): JSX.Element {
       }));
       return;
     }
-    if (!/^\d+$/.test(phone)) {
+    if (!phoneRegex.test(phone)) {
       setInputErrors(prev => ({
         ...prev,
-        phone: 'No. Handphone hanya boleh berisi angka.',
+        phone: 'No. Handphone tidak sesuai.',
+      }));
+      return;
+    }
+    if (!emailRegex.test(email)) {
+      setInputErrors(prev => ({
+        ...prev,
+        email: 'Email tidak sesuai.',
       }));
       return;
     }
@@ -287,9 +293,7 @@ export default function RegisterScreen(): JSX.Element {
                     letterSpacing: showPassword && password ? 1 : 5,
                   }}
                 />
-                <TouchableHighlight
-                  activeOpacity={0.85}
-                  underlayColor="#fff"
+                <Pressable
                   onPress={() => {
                     setShowPassword(!showPassword);
                   }}
@@ -312,7 +316,7 @@ export default function RegisterScreen(): JSX.Element {
                       />
                     </View>
                   </View>
-                </TouchableHighlight>
+                </Pressable>
               </View>
               {inputErrors.password && (
                 <Text
@@ -356,9 +360,7 @@ export default function RegisterScreen(): JSX.Element {
                     letterSpacing: showRePassword && rePassword ? 1 : 5,
                   }}
                 />
-                <TouchableHighlight
-                  activeOpacity={0.85}
-                  underlayColor="#fff"
+                <Pressable
                   onPress={() => {
                     setShowRePassword(!showRePassword);
                   }}
@@ -381,7 +383,7 @@ export default function RegisterScreen(): JSX.Element {
                       />
                     </View>
                   </View>
-                </TouchableHighlight>
+                </Pressable>
               </View>
               {inputErrors.rePassword && (
                 <Text
@@ -391,12 +393,12 @@ export default function RegisterScreen(): JSX.Element {
                 </Text>
               )}
             </View>
-            <TouchableOpacity onPress={handleRegister} disabled={isRegistering}>
+            <Pressable onPress={handleRegister} disabled={isRegistering}>
               <View
                 style={{
                   backgroundColor: themeColors.red,
-                  paddingVertical: 15,
-                  borderRadius: 5,
+                  paddingVertical: 12,
+                  borderRadius: 100,
                   alignItems: 'center',
                   marginBottom: 15,
                   opacity: isRegistering ? 0.5 : 1,
@@ -412,7 +414,7 @@ export default function RegisterScreen(): JSX.Element {
                   {isRegistering ? 'Mendaftar...' : 'Daftar'}
                 </Text>
               </View>
-            </TouchableOpacity>
+            </Pressable>
             {registerError && (
               <View
                 style={{
@@ -451,8 +453,7 @@ export default function RegisterScreen(): JSX.Element {
             alignItems: 'center',
           }}
         >
-          <TouchableOpacity
-            activeOpacity={1}
+          <Pressable
             onPress={() => navigation.goBack()}
           >
             <View style={{ flexDirection: 'row' }}>
@@ -466,7 +467,7 @@ export default function RegisterScreen(): JSX.Element {
                 Masuk.
               </Text>
             </View>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </>

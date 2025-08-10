@@ -1,11 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
   ScrollView,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
+  Text, View,
   TextInput,
+  Image
 } from 'react-native';
 import {
   useSafeAreaFrame,
@@ -20,6 +18,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Icon from '../components/Icon';
 import { login } from '../services/auth-services';
 import customUseNavigation from '../hooks/useAppNavigation';
+import Pressable from '../components/Pressable';
+import { phoneRegex } from '../utils/regex';
 
 export default function LoginScreen() {
   const navigation = customUseNavigation();
@@ -66,6 +66,13 @@ export default function LoginScreen() {
       setInputErrors(prev => ({
         ...prev,
         phone: 'No. Handphone hanya boleh berisi angka.',
+      }));
+      return;
+    }
+    if (!phoneRegex.test(phone)) {
+      setInputErrors(prev => ({
+        ...prev,
+        phone: 'No. Handphone tidak sesuai',
       }));
       return;
     }
@@ -138,48 +145,7 @@ export default function LoginScreen() {
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 5,
-                paddingLeft: 10,
-                paddingVertical: 10,
-                backgroundColor: themeColors.grayDark,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 48,
-                  fontWeight: 'bold',
-                  letterSpacing: 4,
-                  color: themeColors.yellow,
-                }}
-              >
-                CO
-              </Text>
-            </View>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 5,
-                paddingRight: 10,
-                paddingVertical: 10,
-                backgroundColor: themeColors.yellow,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 48,
-                  fontWeight: 'bold',
-                  letterSpacing: 4,
-                  color: themeColors.grayDark,
-                }}
-              >
-                PEK
-              </Text>
-            </View>
+            <Image source={require('../assets/images/copek.png')} style={{ width: frame.width / 2 - 20, height: frame.width / 2 - 20 }} />
           </View>
         </View>
         {error && (
@@ -289,9 +255,7 @@ export default function LoginScreen() {
                   color: themeColors.black,
                 }}
               />
-              <TouchableHighlight
-                activeOpacity={0.85}
-                underlayColor="#fff"
+              <Pressable
                 onPress={() => {
                   setIsSecurePass(!isSecurePass);
                 }}
@@ -314,7 +278,7 @@ export default function LoginScreen() {
                     />
                   </View>
                 </View>
-              </TouchableHighlight>
+              </Pressable>
             </View>
             {inputErrors.password && (
               <Text
@@ -324,12 +288,12 @@ export default function LoginScreen() {
               </Text>
             )}
           </View>
-          <TouchableOpacity disabled={isLoggingIn} onPress={handleLogin}>
+          <Pressable disabled={isLoggingIn} onPress={handleLogin}>
             <View
               style={{
                 backgroundColor: themeColors.red,
-                paddingVertical: 15,
-                borderRadius: 5,
+                paddingVertical: 12,
+                borderRadius: 100,
                 alignItems: 'center',
                 opacity: isLoggingIn ? 0.5 : 1,
               }}
@@ -344,10 +308,9 @@ export default function LoginScreen() {
                 {isLoggingIn ? 'Loading...' : 'Masuk'}
               </Text>
             </View>
-          </TouchableOpacity>
+          </Pressable>
           <View style={{ paddingHorizontal: 30, marginTop: 10 }}>
-            <TouchableOpacity
-              activeOpacity={1}
+            <Pressable
               onPress={() => console.log('Forgot password pressed')}
             >
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -355,7 +318,7 @@ export default function LoginScreen() {
                   Reset kata sandi?
                 </Text>
               </View>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </ScrollView>
@@ -369,8 +332,7 @@ export default function LoginScreen() {
           borderTopWidth: 1,
         }}
       >
-        <TouchableOpacity
-          activeOpacity={1}
+        <Pressable
           onPress={() => {
             navigation.navigate('Register');
           }}
@@ -386,7 +348,7 @@ export default function LoginScreen() {
               Buat akun.
             </Text>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );

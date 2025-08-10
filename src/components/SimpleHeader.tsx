@@ -1,10 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import { JSX } from 'react';
-import { StatusBar, Text, TouchableHighlight, View } from 'react-native';
+import { StatusBar, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
 import Icon from './Icon';
 import useAppNavigation from '../hooks/useAppNavigation';
+import Pressable from './Pressable';
 
 export default function SimpleHeader({
   title,
@@ -30,11 +31,9 @@ export default function SimpleHeader({
       >
         {title && navigation.canGoBack() && (
           <View>
-            <TouchableHighlight
+            <Pressable
               onPress={() => navigation.goBack()}
               disabled={disableBack}
-              underlayColor="#fff"
-              activeOpacity={0.85}
               style={{
                 height: 40,
                 marginHorizontal: 5,
@@ -46,7 +45,7 @@ export default function SimpleHeader({
               }}
             >
               <Icon size={18} name={'chevron-left'} />
-            </TouchableHighlight>
+            </Pressable>
           </View>
         )}
         {title && (

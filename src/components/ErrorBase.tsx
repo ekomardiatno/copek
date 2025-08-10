@@ -1,8 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
 import { JSX } from 'react';
-import { Text, TouchableHighlight, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Icon from './Icon';
 import { themeColors } from '../constants';
+import Button from './Button';
 
 export default function ErrorBase({
   error,
@@ -20,25 +21,12 @@ export default function ErrorBase({
         gap: 10,
       }}
     >
-      <Icon name="triangle-exclamation" color={themeColors.red} size={40} />
-      <Text style={{ fontWeight: 'bold' }}>
+      <Icon name="triangle-exclamation" color={themeColors.red} size={50} />
+      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
         {error?.message || 'Terjadi kesalahan'}
       </Text>
       {onReload && (
-        <TouchableHighlight onPress={onReload}>
-          <View
-            style={{
-              padding: 10,
-              paddingHorizontal: 20,
-              backgroundColor: themeColors.red,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ color: themeColors.white, textAlign: 'center' }}>
-              Coba lagi
-            </Text>
-          </View>
-        </TouchableHighlight>
+        <Button onPress={onReload} color={themeColors.red}>Coba Lagi</Button>
       )}
     </View>
   );

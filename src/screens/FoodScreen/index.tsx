@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { ScrollView, Text, TouchableHighlight, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SimpleHeader from '../../components/SimpleHeader';
 import { themeColors } from '../../constants';
@@ -20,20 +20,24 @@ import { getFoodHomeCollection } from '../../services/copek-food-services';
 import {
   FoodCollectionType,
   FoodType,
-  MerchantType,
 } from '../../types/food-collection-types';
 import Spinner from '../../components/Spinner';
 import getImageThumb from '../../utils/getImageThumb';
 import { CurrentGeocodeLocationContext } from '../../components/CurrentGeocodeLocationProvider';
 import useAppNavigation from '../../hooks/useAppNavigation';
 import useAppSelector from '../../hooks/useAppSelector';
+import { MerchantType } from '../../types/merchant-types';
+import Animated, { useSharedValue } from 'react-native-reanimated';
+import { CartContext } from '../../components/CartProvider';
+import Pressable from '../../components/Pressable';
+import Input from '../../components/Input';
 
 export default function FoodScreen(): JSX.Element {
   const navigation = useAppNavigation();
   const insets = useSafeAreaInsets();
   const currentLocation = useAppSelector<SimpleLocationType | null>(
     state => state.appReducer.currentLocation,
-  )
+  );
   const { currentGeocodeLocation: geocode } = useContext(
     CurrentGeocodeLocationContext,
   );
@@ -45,13 +49,14 @@ export default function FoodScreen(): JSX.Element {
   const [foodCollection, setFoodCollection] = useState<FoodCollectionType[]>(
     [],
   );
+  const lastScrollY = useSharedValue(0)
+  const {showProccedToCheckoutButton, hideProccedToCheckoutButton} = useContext(CartContext)
 
   const fetchCollection = useCallback(
     async (signal?: AbortSignal) => {
       if (!isLoadingCollection) return;
       if (!currentLocation) return;
       if (!cityName) return;
-      console.log(signal);
       setCollectionRequestError(null);
       try {
         const result = await getFoodHomeCollection(
@@ -107,50 +112,15 @@ export default function FoodScreen(): JSX.Element {
 
   return (
     <View style={{ flex: 1, paddingBottom: insets.bottom }}>
-      <SimpleHeader title="Food & Beverage" />
-      <TouchableHighlight
-        style={{ borderRadius: 10, marginHorizontal: 15, marginBottom: 20 }}
-        activeOpacity={0.85}
+      <SimpleHeader title="Makanan & Minuman" />
+      <Pressable
+        style={{ borderRadius: 10, marginHorizontal: 15, marginBottom: 15 }}
         onPress={() => {
           navigation.navigate('SearchMenu');
         }}
       >
-        <View
-          style={{
-            height: 40,
-            overflow: 'hidden',
-            backgroundColor: themeColors.grayLighter,
-            borderRadius: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <View
-            style={{
-              height: 40,
-              width: 40,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Icon
-              name="magnifying-glass"
-              color={themeColors.textMuted}
-              size={16}
-            />
-          </View>
-          <Text
-            style={{
-              color: themeColors.textMuted,
-              paddingHorizontal: 6,
-              paddingRight: 10,
-              letterSpacing: 1,
-            }}
-          >
-            Mau makan apa hari ini?
-          </Text>
-        </View>
-      </TouchableHighlight>
+        <Input iconName='magnifying-glass' placeholder='Mau makan apa hari ini?' readOnly />
+      </Pressable>
       {isLoadingCollection ? (
         <View
           style={{
@@ -175,7 +145,7 @@ export default function FoodScreen(): JSX.Element {
           <Text style={{ fontWeight: 'bold' }}>
             {collectionRequestError?.message || 'Terjadi kesalahan'}
           </Text>
-          <TouchableHighlight onPress={() => setIsLoadingCollection(true)}>
+          <Pressable onPress={() => setIsLoadingCollection(true)}>
             <View
               style={{
                 padding: 10,
@@ -188,14 +158,27 @@ export default function FoodScreen(): JSX.Element {
                 Coba lagi
               </Text>
             </View>
-          </TouchableHighlight>
+          </Pressable>
         </View>
       ) : (
-        <ScrollView
+        <Animated.ScrollView
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingTop: 0,
             paddingVertical: 20,
+          }}
+          onScrollEndDrag={e => {
+            if(e.nativeEvent.contentOffset.y > lastScrollY.value) {
+              hideProccedToCheckoutButton()
+            } else {
+              showProccedToCheckoutButton()
+            }
+          }}
+          onMomentumScrollEnd={e => {
+            lastScrollY.set(e.nativeEvent.contentOffset.y)
+            if(e.nativeEvent.contentOffset.y === 0) {
+              showProccedToCheckoutButton()
+            }
           }}
         >
           {foodCollection.map((row, i) => {
@@ -243,9 +226,17 @@ export default function FoodScreen(): JSX.Element {
                             }
                             priceBeforeDisc={
                               Number(foodItem.foodDiscount) > 0
-                                ? Number(foodItem.foodDiscount)
+                                ? Number(foodItem.foodPrice)
                                 : undefined
                             }
+                            onPress={() => {
+                              navigation.navigate('Merchant', {
+                                params: {
+                                  merchantId: foodItem.merchantId,
+                                  foodId: foodItem.foodId
+                                },
+                              });
+                            }}
                           />
                         );
                       } else {
@@ -259,6 +250,13 @@ export default function FoodScreen(): JSX.Element {
                             )}
                             title={merchant.merchantName}
                             distance={Number(merchant.merchantDistance)}
+                            onPress={() => {
+                              navigation.navigate('Merchant', {
+                                params: {
+                                  merchantId: merchant.merchantId
+                                },
+                              });
+                            }}
                           />
                         );
                       }
@@ -304,6 +302,14 @@ export default function FoodScreen(): JSX.Element {
                                 ? Number(foodItem.foodPrice)
                                 : undefined
                             }
+                            onPress={() => {
+                              navigation.navigate('Merchant', {
+                                params: {
+                                  merchantId: foodItem.merchantId,
+                                  foodId: foodItem.foodId
+                                },
+                              });
+                            }}
                           />
                         );
                       } else {
@@ -318,6 +324,13 @@ export default function FoodScreen(): JSX.Element {
                             title={merchantItem.merchantName}
                             subTitle={merchantItem.merchantName}
                             distance={Number(merchantItem.merchantDistance)}
+                            onPress={() => {
+                              navigation.navigate('Merchant', {
+                                params: {
+                                  merchantId: merchantItem.merchantId
+                                },
+                              });
+                            }}
                           />
                         );
                       }
@@ -327,7 +340,7 @@ export default function FoodScreen(): JSX.Element {
               );
             }
           })}
-        </ScrollView>
+        </Animated.ScrollView>
       )}
     </View>
   );

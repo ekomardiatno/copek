@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import { JSX } from 'react';
-import { ScrollView, StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { ScrollView, StyleProp, Text, View, ViewStyle } from 'react-native';
 import { themeColors } from '../constants';
+import Pressable from './Pressable';
 
 export default function ItemContainer({
   title,
@@ -44,11 +45,11 @@ export default function ItemContainer({
           </View>
           {onSeeMore && (
             <View>
-              <TouchableOpacity onPress={onSeeMore} activeOpacity={1}>
-                <Text style={{ color: themeColors.secondary }}>
+              <Pressable onPress={onSeeMore} activeOpacity={1}>
+                <Text style={{ color: themeColors.primary }}>
                   Lihat semua
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           )}
         </View>
