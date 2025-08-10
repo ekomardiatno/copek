@@ -18,8 +18,8 @@ const colors = {
 
 export const themeColors = {
   ...colors,
-  primary: colors.blue,
-  secondary: colors.yellow,
+  primary: '#ca8a04',
+  secondary: colors.red,
   textColor: colors.black,
   textMuted: '#374151',
   borderColor: '#e5e7eb',
