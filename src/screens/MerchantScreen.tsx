@@ -22,13 +22,7 @@ import {
   getMerchantDetail,
 } from '../services/copek-food-services';
 import parsingError from '../utils/parsingError';
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring
-} from 'react-native-reanimated';
+import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 import Icon from '../components/Icon';
 import { themeColors } from '../constants';
 import LinearGradient from 'react-native-linear-gradient';
@@ -40,9 +34,7 @@ import modDistance from '../utils/modDistance';
 import { colorYiq, distanceMeasurement } from '../utils';
 import LoadingBase from '../components/LoadingBase';
 import ErrorBase from '../components/ErrorBase';
-import FoodItemOnMerchant, {
-  FoodItemOnMerchantContext,
-} from '../components/FoodItemOnMerchant';
+import FoodItem, { FoodItemContext } from '../components/FoodItem';
 import { MerchantContext } from '../components/MerchantProvider';
 import { CartContext } from '../components/CartProvider';
 import Pressable from '../components/Pressable';
@@ -67,7 +59,7 @@ export default function MerchantScreen(): JSX.Element {
     TypeError | Error | null
   >(null);
   const [foodList, setFoodList] = useState<FoodMerchantType[]>([]);
-  const { setFoodIdToPreview } = useContext(FoodItemOnMerchantContext);
+  const { setFoodIdToPreview } = useContext(FoodItemContext);
   const { setMerchantIsBeingViewed } = useContext(MerchantContext);
 
   useEffect(() => {
@@ -143,39 +135,13 @@ export default function MerchantScreen(): JSX.Element {
   const { showProccedToCheckoutButton, hideProccedToCheckoutButton } =
     useContext(CartContext);
 
-  const opacityHeader = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(
-        scrollY.value,
-        [0, 120, 190],
-        [0, 0, 1],
-        Extrapolation.CLAMP,
-      ),
-    };
-  });
-  const opacityHideHeader = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(
-        scrollY.value,
-        [0, 120, 190],
-        [1, 1, 0],
-        Extrapolation.CLAMP,
-      ),
-    };
-  });
+  const opacityHeader = useSharedValue(0);
+  const opacityHideHeader = useSharedValue(1);
 
-  const opacityMapLocation = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(
-        scrollY.value,
-        [0, 50, 100],
-        [1, 1, 0],
-        Extrapolation.CLAMP,
-      ),
-    };
-  });
+  const opacityMapLocation = useSharedValue(1);
 
-  const heightThumbnail = useSharedValue(heightImg)
+  const heightThumbnail = useSharedValue(heightImg);
+  const bottomRadiusThumbnail = useSharedValue(20);
 
   if (isMerchantLoading)
     return <LoadingBase onCancel={() => navigation.goBack()} />;
@@ -223,8 +189,8 @@ export default function MerchantScreen(): JSX.Element {
               right: 0,
               bottom: 0,
               backgroundColor: 'rgba(0,0,0,.35)',
+              opacity: opacityHeader,
             },
-            opacityHeader,
           ]}
         />
         <View style={{ paddingVertical: 10 }}>
@@ -249,8 +215,8 @@ export default function MerchantScreen(): JSX.Element {
                     width: '100%',
                     height: '100%',
                     backgroundColor: 'rgba(0,0,0,.35)',
+                    opacity: opacityHideHeader,
                   },
-                  opacityHideHeader,
                 ]}
               />
               <Icon name="chevron-left" color={themeColors.white} size={18} />
@@ -267,8 +233,8 @@ export default function MerchantScreen(): JSX.Element {
                 fontWeight: 'bold',
                 fontSize: 18,
                 color: themeColors.white,
+                opacity: opacityHeader,
               },
-              opacityHeader,
             ]}
           >
             {merchantDetail?.merchantName}
@@ -284,8 +250,11 @@ export default function MerchantScreen(): JSX.Element {
             left: 0,
             right: 0,
             backgroundColor: '#333',
-            height: heightThumbnail
-          }
+            height: heightThumbnail,
+            borderBottomLeftRadius: bottomRadiusThumbnail,
+            borderBottomRightRadius: bottomRadiusThumbnail,
+            elevation: 2
+          },
         ]}
       >
         <View style={{ flex: 1, overflow: 'hidden' }}>
@@ -298,8 +267,8 @@ export default function MerchantScreen(): JSX.Element {
                 left: 0,
                 right: 0,
                 zIndex: 1,
+                opacity: opacityHideHeader,
               },
-              opacityHideHeader,
             ]}
           >
             <LinearGradient
@@ -307,13 +276,15 @@ export default function MerchantScreen(): JSX.Element {
               colors={['rgba(0,0,0,.75)', 'rgba(0,0,0,.25)', 'transparent']}
             />
           </Animated.View>
-          <View
+          <Animated.View
             style={{
               width: '100%',
               height: '100%',
               alignItems: 'center',
               justifyContent: 'center',
               overflow: 'hidden',
+              borderBottomLeftRadius: bottomRadiusThumbnail,
+              borderBottomRightRadius: bottomRadiusThumbnail,
             }}
           >
             <Image
@@ -322,12 +293,12 @@ export default function MerchantScreen(): JSX.Element {
                 uri: getImageThumb(merchantDetail?.merchantPicture || '', 'md'),
               }}
             />
-          </View>
+          </Animated.View>
         </View>
         <View
           style={{
             position: 'absolute',
-            right: 15,
+            right: 20,
             bottom: -20,
           }}
         >
@@ -350,8 +321,8 @@ export default function MerchantScreen(): JSX.Element {
                   alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: themeColors.primary,
+                  opacity: opacityMapLocation,
                 },
-                opacityMapLocation,
               ]}
             >
               <Icon
@@ -374,10 +345,18 @@ export default function MerchantScreen(): JSX.Element {
         <Animated.ScrollView
           onScroll={e => {
             scrollY.value = withSpring(e.nativeEvent.contentOffset.y);
-            if(e.nativeEvent.contentOffset.y >= 190) {
-              heightThumbnail.value = withSpring(insets.top + 60)
+            if (e.nativeEvent.contentOffset.y >= 190) {
+              heightThumbnail.value = withSpring(insets.top + 60);
+              opacityHeader.value = withSpring(1);
+              opacityHideHeader.value = withSpring(0);
+              opacityMapLocation.value = withSpring(0);
+              bottomRadiusThumbnail.value = withSpring(0)
             } else {
-              heightThumbnail.value = withSpring(heightImg)
+              heightThumbnail.value = withSpring(heightImg);
+              opacityHideHeader.value = withSpring(1);
+              opacityMapLocation.value = withSpring(1);
+              opacityHeader.value = withSpring(0);
+              bottomRadiusThumbnail.value = withSpring(20)
             }
           }}
           onScrollEndDrag={e => {
@@ -419,6 +398,7 @@ export default function MerchantScreen(): JSX.Element {
                     marginBottom: 15,
                     fontSize: 15,
                     color: themeColors.textMuted,
+                    fontWeight: '300',
                   }}
                 >
                   {merchantDetail?.merchantAddress || '-'}
@@ -488,6 +468,8 @@ export default function MerchantScreen(): JSX.Element {
                 paddingVertical: 15,
                 paddingHorizontal: 15,
                 backgroundColor: themeColors.grayLighter,
+                borderBottomColor: themeColors.borderColor,
+                borderBottomWidth: 1,
               }}
             >
               <Text style={{ fontWeight: 'bold', textTransform: 'uppercase' }}>
@@ -498,11 +480,12 @@ export default function MerchantScreen(): JSX.Element {
               style={{
                 backgroundColor: themeColors.borderColor,
                 gap: 1,
+                marginTop: 1,
                 marginHorizontal: 15,
               }}
             >
               {foodList.map(item => {
-                return <FoodItemOnMerchant key={item.foodId} item={item} />;
+                return <FoodItem key={item.foodId} item={item} />;
               })}
             </View>
           </View>

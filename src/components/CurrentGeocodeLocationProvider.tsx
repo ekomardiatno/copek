@@ -23,6 +23,7 @@ export const CurrentGeocodeLocationContext = createContext<{
     React.SetStateAction<Error | TypeError | null>
   >;
   cityName: string;
+  routeName: string
 }>({
   currentGeocodeLocation: [],
   setCurrentGeocodeLocation: () => {},
@@ -31,6 +32,7 @@ export const CurrentGeocodeLocationContext = createContext<{
   currentGeocodeLocationRequestError: null,
   setCurrentGeocodeLocationRequestError: () => {},
   cityName: '',
+  routeName: ''
 });
 
 export default function CurrentGeocodeLocationProvider({
@@ -51,6 +53,7 @@ export default function CurrentGeocodeLocationProvider({
     setCurrentGeocodeLocationRequestError,
   ] = useState<Error | TypeError | null>(null);
   const [cityName, setCityName] = useState<string>('');
+  const [routeName, setRouteName] = useState<string>('');
 
   useEffect(() => {
     if (location) {
@@ -99,6 +102,12 @@ export default function CurrentGeocodeLocationProvider({
       const findCity = currentGeocodeLocation.find(row =>
         row.types?.includes('administrative_area_level_2'),
       );
+      const route = currentGeocodeLocation.find(row => 
+        row.types?.includes('route')
+      )
+      if(route?.formatted_address) {
+        setRouteName(route.formatted_address)
+      }
       if (findCity) {
         const city = findCity.address_components?.find(row =>
           row.types?.includes('administrative_area_level_2'),
@@ -123,6 +132,7 @@ export default function CurrentGeocodeLocationProvider({
         currentGeocodeLocationRequestError,
         setCurrentGeocodeLocationRequestError,
         cityName,
+        routeName
       }}
     >
       {children}

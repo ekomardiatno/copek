@@ -16,11 +16,15 @@ export default function Input({
   style,
   iconName,
   styleTextInput,
+  iconStyle,
+  iconSize,
   ...props
 }: TextInputProps & {
   style?: StyleProp<ViewStyle>;
   iconName?: FontAwesome6SolidIconName;
   styleTextInput?: StyleProp<TextStyle>;
+  iconStyle?: StyleProp<ViewStyle>;
+  iconSize?: number;
 }): JSX.Element {
   return (
     <View>
@@ -40,14 +44,14 @@ export default function Input({
       >
         {iconName && (
           <View
-            style={{
+            style={[{
               alignItems: 'center',
               justifyContent: 'center',
               marginRight: 15,
               paddingVertical: 14
-            }}
+            }, iconStyle]}
           >
-            <Icon name={iconName} color={themeColors.grayDark} size={16} />
+            <Icon name={iconName} color={themeColors.grayDark} size={iconSize || 16} />
           </View>
         )}
         <TextInput

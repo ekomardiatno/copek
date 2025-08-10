@@ -36,7 +36,7 @@ export default function Button({
           <Text
             style={{
               color: themeColors.white,
-              fontSize: 16,
+              fontSize: 13,
               fontWeight: 'bold',
             }}
           >

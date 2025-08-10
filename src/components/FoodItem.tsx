@@ -24,7 +24,7 @@ import { MerchantContext } from './MerchantProvider';
 import Icon from './Icon';
 import Pressable from './Pressable';
 
-export const FoodItemOnMerchantContext = createContext<{
+export const FoodItemContext = createContext<{
   foodIdToPreview: string | null;
   setFoodIdToPreview: React.Dispatch<React.SetStateAction<string | null>>;
 }>({
@@ -32,22 +32,20 @@ export const FoodItemOnMerchantContext = createContext<{
   setFoodIdToPreview: () => {},
 });
 
-export function FoodItemOnMerchantProvider({
+export function FoodItemProvider({
   children,
 }: {
   children: JSX.Element | React.ReactNode;
 }): JSX.Element {
   const [foodIdToPreview, setFoodIdToPreview] = useState<string | null>(null);
   return (
-    <FoodItemOnMerchantContext.Provider
-      value={{ foodIdToPreview, setFoodIdToPreview }}
-    >
+    <FoodItemContext.Provider value={{ foodIdToPreview, setFoodIdToPreview }}>
       {children}
-    </FoodItemOnMerchantContext.Provider>
+    </FoodItemContext.Provider>
   );
 }
 
-export default function FoodItemOnMerchant({
+export default function FoodItem({
   item,
 }: {
   item: FoodMerchantType;
@@ -58,9 +56,7 @@ export default function FoodItemOnMerchant({
   const cartItem = cart.find(r => r.foodId === item.foodId);
   const { setIsOpenCartItemModal, setSelectedCartItem } =
     useContext(CartContext);
-  const { setFoodIdToPreview, foodIdToPreview } = useContext(
-    FoodItemOnMerchantContext,
-  );
+  const { setFoodIdToPreview, foodIdToPreview } = useContext(FoodItemContext);
   const [isPreviewOpened, setIsPreviewOpened] = useState(false);
   const { merchantIsBeingViewed } = useContext(MerchantContext);
   const merchantOnCart = useAppSelector(
@@ -91,11 +87,12 @@ export default function FoodItemOnMerchant({
   }, [dispatch, item, merchantIsBeingViewed]);
 
   const handleAddToCart = useCallback(() => {
-    if (!merchantIsBeingViewed) return;
-    if (merchantOnCart && cart.length) {
-      if (merchantOnCart.merchantId !== merchantIsBeingViewed.merchantId) {
-        setShowPromptConfirmation(true);
-        return;
+    if (merchantIsBeingViewed) {
+      if (merchantOnCart && cart.length) {
+        if (merchantOnCart.merchantId !== merchantIsBeingViewed.merchantId) {
+          setShowPromptConfirmation(true);
+          return;
+        }
       }
     }
     if (cartItem) {
@@ -103,17 +100,19 @@ export default function FoodItemOnMerchant({
       setIsOpenCartItemModal(true);
       return;
     }
-    dispatch(setMerchantOnCart(merchantIsBeingViewed));
-    dispatch(
-      setCart([
-        ...cart,
-        {
-          ...item,
-          note: '',
-          qty: 1,
-        },
-      ]),
-    );
+    if (merchantIsBeingViewed) {
+      dispatch(setMerchantOnCart(merchantIsBeingViewed));
+      dispatch(
+        setCart([
+          ...cart,
+          {
+            ...item,
+            note: '',
+            qty: 1,
+          },
+        ]),
+      );
+    }
   }, [
     cart,
     cartItem,
@@ -134,13 +133,14 @@ export default function FoodItemOnMerchant({
           setFoodIdToPreview(item.foodId);
         }}
       >
-        <View style={{ backgroundColor: themeColors.white }}>
+        <View>
           <View
             style={{
               flexDirection: 'row',
               position: 'relative',
-              paddingVertical: 20,
               paddingBottom: 30,
+              paddingTop: 10,
+              backgroundColor: themeColors.white
             }}
           >
             <View style={{ flex: 1 }}>
@@ -189,7 +189,6 @@ export default function FoodItemOnMerchant({
                 style={{
                   width: 120,
                   height: 120,
-                  backgroundColor: themeColors.grayLighter,
                   borderRadius: 10,
                   elevation: 2,
                 }}
@@ -371,11 +370,7 @@ export default function FoodItemOnMerchant({
           }}
         >
           <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <Icon
-              name="shop"
-              size={80}
-              color={themeColors.primary}
-            />
+            <Icon name="shop" size={80} color={themeColors.primary} />
           </View>
           <Text
             style={{

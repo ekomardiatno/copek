@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import CartProvider from './CartProvider';
-import { FoodItemOnMerchantProvider } from './FoodItemOnMerchant';
+import { FoodItemProvider } from './FoodItem';
 import MerchantProvider from './MerchantProvider';
 
 export default function BaseProvider({
@@ -10,9 +10,9 @@ export default function BaseProvider({
 }): JSX.Element {
   return (
     <CartProvider>
-      <FoodItemOnMerchantProvider>
+      <FoodItemProvider>
         <MerchantProvider>{children}</MerchantProvider>
-      </FoodItemOnMerchantProvider>
+      </FoodItemProvider>
     </CartProvider>
   );
 }

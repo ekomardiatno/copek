@@ -12,6 +12,7 @@ import ListMenuScreen from './screens/ListMenuScreen';
 import ListMerchantScreen from './screens/ListMerchantScreen';
 import MerchantScreen from './screens/MerchantScreen';
 import BaseProvider from './components/BaseProvider';
+import FoodOrderSecreen from './screens/FoodOrderScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ export type RootStackParamList = {
       foodId?: string;
     };
   };
+  FoodOrder: undefined
 };
 
 function RootStack() {
@@ -113,6 +115,14 @@ function RootStack() {
         }}
         name="Merchant"
         component={MerchantScreen}
+        layout={BaseProvider}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="FoodOrder"
+        component={FoodOrderSecreen}
         layout={BaseProvider}
       />
     </Stack.Navigator>

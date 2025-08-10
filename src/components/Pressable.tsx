@@ -1,8 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { JSX } from 'react';
 import {
+  StyleProp,
   TouchableHighlight,
-  TouchableHighlightProps
+  TouchableHighlightProps,
+  ViewStyle
 } from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 
@@ -14,9 +16,11 @@ export default function Pressable({
   activeOpacity,
   activeScale = 0.98,
   style,
+  viewStyle,
   ...props
 }: TouchableHighlightProps & {
   activeScale?: number;
+  viewStyle?: StyleProp<ViewStyle>
 }): JSX.Element {
   const scale = useSharedValue(1);
   return (
@@ -38,7 +42,7 @@ export default function Pressable({
         if (onPressOut) onPressOut(e);
       }}
     >
-      <Animated.View style={{ transform: [{ scale }], flexGrow: 1 }}>
+      <Animated.View style={[{ transform: [{ scale }], flexGrow: 1 }, viewStyle]}>
         {children}
       </Animated.View>
     </TouchableHighlight>

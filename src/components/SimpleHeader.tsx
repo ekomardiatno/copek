@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import { JSX } from 'react';
-import { StatusBar, Text, View } from 'react-native';
+import { StatusBar, StyleProp, Text, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
 import Icon from './Icon';
@@ -10,9 +10,11 @@ import Pressable from './Pressable';
 export default function SimpleHeader({
   title,
   disableBack = false,
+  containerStyle
 }: {
   title?: string;
   disableBack?: boolean;
+  containerStyle?: StyleProp<ViewStyle>
 }): JSX.Element {
   const insets = useSafeAreaInsets();
   const navigation = useAppNavigation();
@@ -20,7 +22,7 @@ export default function SimpleHeader({
     <>
       <StatusBar barStyle="dark-content" />
       <View
-        style={{
+        style={[{
           flexDirection: 'row',
           paddingHorizontal: !title ? 0 : 15,
           paddingVertical: !title ? 0 : 10,
@@ -28,7 +30,7 @@ export default function SimpleHeader({
           paddingTop: insets.top + (!title ? 0 : 10),
           backgroundColor: themeColors.white,
           alignItems: 'center',
-        }}
+        }, containerStyle]}
       >
         {title && navigation.canGoBack() && (
           <View>

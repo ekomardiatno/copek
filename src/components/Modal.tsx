@@ -132,7 +132,7 @@ export default function Modal({
           flex: 1,
           alignItems: 'center',
           justifyContent: 'flex-end',
-          backgroundColor: 'rgba(0,0,0,.15)',
+          backgroundColor: 'rgba(0,0,0,.25)',
           paddingBottom: insets.bottom,
           paddingTop: insets.top,
         }}

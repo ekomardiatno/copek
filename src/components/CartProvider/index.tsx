@@ -57,7 +57,7 @@ export default function CartProvider({
   }, 0);
 
   const totalPrice = cart.reduce((total, item) => {
-    return total + item.qty * Number(item.foodPrice);
+    return total + item.qty * (Number(item.foodPrice) - Number(item.foodDiscount) / 100 * Number(item.foodPrice));
   }, 0);
 
   const scale = useSharedValue(initialSharedValue.scale);
@@ -73,8 +73,9 @@ export default function CartProvider({
     bottom.value = withSpring(-150);
   }, [bottom]);
 
+  const currentScreen = navigation.getState().routes.at(-1)?.name;
+
   useEffect(() => {
-    const currentScreen = navigation.getState().routes.at(-1)?.name;
     if (!['Food', 'Merchant'].includes(currentScreen as string)) {
       hideProccedToCheckoutButton()
     } else {
@@ -84,7 +85,9 @@ export default function CartProvider({
         bottom.value = withSpring(initialSharedValue.bottom);
       }
     }
-  }, [bottom, cart.length, hideProccedToCheckoutButton, navigation]);
+  }, [bottom, cart.length, hideProccedToCheckoutButton, currentScreen]);
+
+  console.log(isOpenCartItemModal)
 
   return (
     <CartContext.Provider
@@ -116,10 +119,13 @@ export default function CartProvider({
           },
         ]}
       >
-        <View style={{ margin: 20 }}>
+        <View style={{ margin: 20, marginHorizontal: 15 }}>
           <Pressable
             onPressIn={() => {
               scale.value = withSpring(0.95);
+            }}
+            onPress={() => {
+              navigation.navigate('FoodOrder')
             }}
             onPressOut={() => {
               scale.value = withSpring(1);
