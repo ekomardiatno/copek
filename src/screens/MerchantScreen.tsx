@@ -27,8 +27,6 @@ import Icon from '../components/Icon';
 import { themeColors } from '../constants';
 import LinearGradient from 'react-native-linear-gradient';
 import getImageThumb from '../utils/getImageThumb';
-import useAppSelector from '../hooks/useAppSelector';
-import { SimpleLocationType } from '../redux/reducers/app.reducer';
 import Dash from 'react-native-dash-2';
 import modDistance from '../utils/modDistance';
 import { colorYiq, distanceMeasurement } from '../utils';
@@ -38,6 +36,7 @@ import FoodItem, { FoodItemContext } from '../components/FoodItem';
 import { MerchantContext } from '../components/MerchantProvider';
 import { CartContext } from '../components/CartProvider';
 import Pressable from '../components/Pressable';
+import { GeolocationContext } from '../components/GeolocationProvider';
 
 export default function MerchantScreen(): JSX.Element {
   const route = useRoute<AppRouteProp<'Merchant'>>();
@@ -46,9 +45,7 @@ export default function MerchantScreen(): JSX.Element {
   const frame = useSafeAreaFrame();
   const navigation = useAppNavigation();
   const [isMerchantLoading, setIsMerchantLoading] = useState(true);
-  const currentLocation = useAppSelector<SimpleLocationType | null>(
-    state => state.appReducer.currentLocation,
-  );
+  const { currentLocation } = useContext(GeolocationContext);
   const [merchantRequestError, setMerchantRequestError] = useState<
     TypeError | Error | null
   >(null);

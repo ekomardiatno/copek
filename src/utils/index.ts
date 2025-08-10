@@ -1,4 +1,5 @@
 import { themeColors } from '../constants';
+import { PlaceType } from '../types/google-map-types';
 
 export function colorYiq(hex: string): string {
   var r = parseInt(hex.substr(1, 2), 16),
@@ -39,4 +40,31 @@ export function distanceMeasurement(
     }
     return dist;
   }
+}
+
+export function generateCityAndRouteName(geocode: PlaceType[]): {
+  cityName: string;
+  routeName: string;
+} {
+  let routeName = '';
+  let cityName = '';
+  const findCity = geocode.find(row =>
+    row.types?.includes('administrative_area_level_2'),
+  );
+  const route = geocode.find(row => row.types?.includes('route'));
+  if (route?.formatted_address) {
+    routeName = route.formatted_address;
+  }
+  if (findCity) {
+    const city = findCity.address_components?.find(row =>
+      row.types?.includes('administrative_area_level_2'),
+    );
+    cityName = city?.short_name || '';
+  } else {
+    const city = geocode[0].address_components?.find(row =>
+      row.types?.includes('administrative_area_level_2'),
+    );
+    cityName = city?.short_name || '';
+  }
+  return { cityName, routeName };
 }

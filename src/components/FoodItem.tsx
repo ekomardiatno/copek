@@ -241,10 +241,10 @@ export default function FoodItem({
                       borderRadius: 32 / 2,
                       overflow: 'hidden',
                       paddingHorizontal: 8,
-                      borderColor: themeColors.secondary,
+                      borderColor: themeColors.primary,
                       borderWidth: 1,
                       backgroundColor: cartItem
-                        ? themeColors.secondary
+                        ? themeColors.primary
                         : themeColors.white,
                       justifyContent: 'center',
                       alignItems: 'center',
@@ -256,7 +256,7 @@ export default function FoodItem({
                         fontWeight: 'bold',
                         color: cartItem
                           ? themeColors.white
-                          : themeColors.secondary,
+                          : themeColors.primary,
                         fontSize: 13,
                       }}
                     >
@@ -347,7 +347,7 @@ export default function FoodItem({
                 setFoodIdToPreview(null);
                 handleAddToCart();
               }}
-              color={themeColors.secondary}
+              color={themeColors.primary}
             >
               {cartItem
                 ? `${cartItem.qty} ${cartItem.qty > 1 ? 'items' : 'item'}`

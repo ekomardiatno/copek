@@ -12,8 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { themeColors } from '../constants';
 import Input from '../components/Input';
 import { searchFood } from '../services/copek-food-services';
-import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
-import { SimpleLocationType } from '../redux/reducers/app.reducer';
+import { GeocodeContext } from '../components/GeocodeProvider';
 import { FoodType } from '../types/food-collection-types';
 import ItemHorizontal from '../components/ItemHorizontal';
 import getImageThumb from '../utils/getImageThumb';
@@ -21,15 +20,13 @@ import Spinner from '../components/Spinner';
 import Icon from '../components/Icon';
 import SimpleHeader from '../components/SimpleHeader';
 import InfiniteScroll from '../components/InfiniteScroll';
-import useAppSelector from '../hooks/useAppSelector';
 import useAppNavigation from '../hooks/useAppNavigation';
 import Pressable from '../components/Pressable';
+import { GeolocationContext } from '../components/GeolocationProvider';
 export default function SearchMenuScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
-  const { cityName } = useContext(CurrentGeocodeLocationContext);
-  const currentLocation = useAppSelector<SimpleLocationType | null>(
-    state => state.appReducer.currentLocation,
-  );
+  const { currentCityName } = useContext(GeocodeContext);
+  const { currentLocation } = useContext(GeolocationContext);
   const navigation = useAppNavigation();
   const timeoutFetch = useRef<NodeJS.Timeout | null>(null);
   const [search, setSearch] = useState<string>('');
@@ -65,12 +62,12 @@ export default function SearchMenuScreen(): JSX.Element {
       }
       if (!loading) return;
       if (!currentLocation) return;
-      if (!cityName) return;
+      if (!currentCityName) return;
       setError(null);
       try {
         const result = await searchFood(
           search,
-          cityName,
+          currentCityName,
           currentLocation,
           page,
           'nearest',
@@ -92,7 +89,7 @@ export default function SearchMenuScreen(): JSX.Element {
         setLoading(false);
       }
     },
-    [cityName, search, currentLocation, page, loading, isAllLoaded],
+    [currentCityName, search, currentLocation, page, loading, isAllLoaded],
   );
 
   const abortController = useRef<AbortController | null>(null);

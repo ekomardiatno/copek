@@ -15,7 +15,6 @@ import Icon from '../../components/Icon';
 import ItemContainer from '../../components/ItemContainer';
 import ItemVertical from '../../components/ItemVertical';
 import ItemHorizontal from '../../components/ItemHorizontal';
-import { SimpleLocationType } from '../../redux/reducers/app.reducer';
 import { getFoodHomeCollection } from '../../services/copek-food-services';
 import {
   FoodCollectionType,
@@ -23,23 +22,21 @@ import {
 } from '../../types/food-collection-types';
 import Spinner from '../../components/Spinner';
 import getImageThumb from '../../utils/getImageThumb';
-import { CurrentGeocodeLocationContext } from '../../components/CurrentGeocodeLocationProvider';
+import { GeocodeContext } from '../../components/GeocodeProvider';
 import useAppNavigation from '../../hooks/useAppNavigation';
-import useAppSelector from '../../hooks/useAppSelector';
 import { MerchantType } from '../../types/merchant-types';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import { CartContext } from '../../components/CartProvider';
 import Pressable from '../../components/Pressable';
 import Input from '../../components/Input';
+import { GeolocationContext } from '../../components/GeolocationProvider';
 
 export default function FoodScreen(): JSX.Element {
   const navigation = useAppNavigation();
   const insets = useSafeAreaInsets();
-  const currentLocation = useAppSelector<SimpleLocationType | null>(
-    state => state.appReducer.currentLocation,
-  );
-  const { currentGeocodeLocation: geocode } = useContext(
-    CurrentGeocodeLocationContext,
+  const { currentLocation } = useContext(GeolocationContext);
+  const { currentGeocode: geocode } = useContext(
+    GeocodeContext,
   );
   const [cityName, setCityName] = useState<string>('');
   const [isLoadingCollection, setIsLoadingCollection] = useState(true);

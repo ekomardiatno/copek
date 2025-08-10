@@ -1,4 +1,4 @@
-import { SET_CURRENT_LOCATION, SET_SESSION } from '../types';
+import { SET_SESSION } from '../types';
 import { PayloadAction } from '@reduxjs/toolkit';
 import persistReducer from 'redux-persist/es/persistReducer';
 import persistConfig from '../persistConfig';
@@ -17,10 +17,8 @@ export type SimpleLocationType = {
 
 const initialState: {
   session: SessionStateType | null;
-  currentLocation: SimpleLocationType | null;
 } = {
   session: null,
-  currentLocation: null,
 };
 
 const appReducer = (
@@ -33,11 +31,6 @@ const appReducer = (
       return {
         ...state,
         session: payload as SessionStateType | null,
-      };
-    case SET_CURRENT_LOCATION:
-      return {
-        ...state,
-        currentLocation: payload as SimpleLocationType | null,
       };
     default:
       return state;

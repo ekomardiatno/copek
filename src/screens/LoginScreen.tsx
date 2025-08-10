@@ -1,6 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
-  ScrollView,
   Text, View,
   TextInput,
   Image
@@ -135,13 +134,15 @@ export default function LoginScreen() {
   return (
     <View style={{ flex: 1, paddingBottom: insets.bottom }}>
       <SimpleHeader />
-      <ScrollView>
+      <View style={{ flex: 1, justifyContent: 'center' }}>
         <View
           style={{
+            alignSelf: 'center',
             paddingHorizontal: 30,
             alignItems: 'center',
             justifyContent: 'center',
             height: frame.width / 2,
+            width: frame.width / 2,
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -259,6 +260,7 @@ export default function LoginScreen() {
                 onPress={() => {
                   setIsSecurePass(!isSecurePass);
                 }}
+                viewStyle={{ flexGrow: 0 }}
               >
                 <View style={{ paddingVertical: 5 }}>
                   <View
@@ -288,7 +290,7 @@ export default function LoginScreen() {
               </Text>
             )}
           </View>
-          <Pressable disabled={isLoggingIn} onPress={handleLogin}>
+          <Pressable viewStyle={{ flexGrow: 0 }} disabled={isLoggingIn} onPress={handleLogin}>
             <View
               style={{
                 backgroundColor: themeColors.red,
@@ -312,6 +314,7 @@ export default function LoginScreen() {
           <View style={{ paddingHorizontal: 30, marginTop: 10 }}>
             <Pressable
               onPress={() => console.log('Forgot password pressed')}
+              viewStyle={{ flexGrow: 0 }}
             >
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                 <Text style={{ fontSize: 13, textAlign: 'center' }}>
@@ -321,7 +324,7 @@ export default function LoginScreen() {
             </Pressable>
           </View>
         </View>
-      </ScrollView>
+      </View>
 
       <View
         style={{

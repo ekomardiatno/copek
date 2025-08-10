@@ -1,80 +1,27 @@
 /* eslint-disable react-native/no-inline-styles */
-import { JSX, useCallback, useContext, useEffect, useState } from 'react';
+import { JSX, useContext } from 'react';
 import SimpleHeader from '../components/SimpleHeader';
-import {
-  Alert, Linking,
-  PermissionsAndroid,
-  PermissionStatus, Text, View
-} from 'react-native';
+import { Text, View } from 'react-native';
 import { themeColors } from '../constants';
 import {
   useSafeAreaInsets
 } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
-import { setCurrentLocation, setSession } from '../redux/actions/app.action';
+import { setSession } from '../redux/actions/app.action';
 import Menu from '../components/homeComponents/Menu';
-import Geolocation from '@react-native-community/geolocation';
 import Icon from '../components/Icon';
-import {
-  SimpleLocationType
-} from '../redux/reducers/app.reducer';
-import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
+import { GeocodeContext } from '../components/GeocodeProvider';
 import useAppNavigation from '../hooks/useAppNavigation';
-import useAppSelector from '../hooks/useAppSelector';
 import Pressable from '../components/Pressable';
+import { GeolocationContext } from '../components/GeolocationProvider';
 
 export default function HomeScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
   const navigation = useAppNavigation();
-  const [permissionAndroid, setPermissionAndroid] =
-    useState<PermissionStatus | null>(null);
-  const [isGettingLocation, setIsGettingLocation] = useState(true);
-  const location = useAppSelector<SimpleLocationType | null>(
-    state => state.appReducer.currentLocation,
-  );
-  const setLocation = useCallback((pos: SimpleLocationType) => {
-    dispatch(setCurrentLocation(pos));
-  }, [dispatch]);
-  const {currentGeocodeLocation: geocode} = useContext(CurrentGeocodeLocationContext);
+  const {isGettingCurrentLocation, currentLocation} = useContext(GeolocationContext)
+  const {currentGeocode: geocode} = useContext(GeocodeContext);
   const route = geocode.find(r => r.types?.find(a => a === 'route'));
-
-  useEffect(() => {
-    const requestPermission = async () => {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-      setPermissionAndroid(granted);
-    };
-    if (isGettingLocation) requestPermission();
-  }, [isGettingLocation]);
-
-  useEffect(() => {
-    if (permissionAndroid === 'never_ask_again') {
-      Alert.alert(
-        'Location Permission Required',
-        'This app requires location permission to function properly. Please enable it in your device settings.',
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'Settings',
-            onPress: () => {
-              Linking.openSettings();
-            },
-          },
-        ],
-      );
-    } else if (permissionAndroid === 'granted') {
-      Geolocation.getCurrentPosition(pos => {
-        const { latitude, longitude } = pos.coords;
-        setLocation({ latitude, longitude });
-      });
-    }
-    setIsGettingLocation(false);
-  }, [permissionAndroid, setLocation]);
 
   const handleLogout = () => {
     dispatch(setSession(null));
@@ -152,7 +99,7 @@ export default function HomeScreen(): JSX.Element {
               >
                 {route && route.formatted_address
                   ? route.formatted_address.split(',')[0].trim()
-                  : `${location?.latitude}, ${location?.longitude}`}
+                  : `${currentLocation?.latitude}, ${currentLocation?.longitude}`}
               </Text>
             </View>
             <Pressable onPress={handleLogout}>
@@ -195,7 +142,7 @@ export default function HomeScreen(): JSX.Element {
               iconName="motorcycle"
               onPress={() => {}}
               color={themeColors.green}
-              disabled={location === null || isGettingLocation}
+              disabled={currentLocation === null || isGettingCurrentLocation}
             />
             <Menu
               title="Food"
@@ -205,7 +152,7 @@ export default function HomeScreen(): JSX.Element {
                 navigation.navigate('Food');
               }}
               color={themeColors.red}
-              disabled={location === null || isGettingLocation}
+              disabled={currentLocation === null || isGettingCurrentLocation}
             />
           </View>
         </View>

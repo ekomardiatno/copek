@@ -7,7 +7,7 @@ const colors = {
   grayDark: '#374151',
   grayDarker: '#1f2937',
   blue: '#1d4ed8',
-  yellow: '#a16207',
+  yellow: '#ca8a04',
   green: '#15803d',
   purple: '#7e22ce',
   pink: '#be185d',
@@ -18,8 +18,8 @@ const colors = {
 
 export const themeColors = {
   ...colors,
-  primary: '#ca8a04',
-  secondary: colors.red,
+  primary: '#eab308',
+  secondary: '#e11d48',
   textColor: colors.black,
   textMuted: '#374151',
   borderColor: '#e5e7eb',

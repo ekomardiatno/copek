@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SimpleHeader from '../components/SimpleHeader';
 import { ScrollView, Text, View } from 'react-native';
 import { themeColors } from '../constants';
-import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
+import { GeocodeContext } from '../components/GeocodeProvider';
 import Input from '../components/Input';
 import useAppSelector from '../hooks/useAppSelector';
 import FoodItem, { FoodItemProvider } from '../components/FoodItem';
@@ -17,7 +17,7 @@ import Pressable from '../components/Pressable';
 
 export default function FoodOrderSecreen(): JSX.Element {
   const insets = useSafeAreaInsets();
-  const { routeName } = useContext(CurrentGeocodeLocationContext);
+  const { currentRouteName } = useContext(GeocodeContext);
   const cart = useAppSelector(state => state.cartReducer.cart);
   const navigation = useAppNavigation();
   return (
@@ -95,7 +95,7 @@ export default function FoodOrderSecreen(): JSX.Element {
                 >
                   <View style={{ flex: 1, gap: 5 }}>
                     <Text style={{ fontSize: 14, fontWeight: '400' }}>
-                      {routeName}
+                      {currentRouteName}
                     </Text>
                   </View>
                 </View>

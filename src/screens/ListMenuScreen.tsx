@@ -13,28 +13,25 @@ import { View } from 'react-native';
 import InfiniteScroll from '../components/InfiniteScroll';
 import { FoodType } from '../types/food-collection-types';
 import parsingError from '../utils/parsingError';
-import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
-import { SimpleLocationType } from '../redux/reducers/app.reducer';
+import { GeocodeContext } from '../components/GeocodeProvider';
 import { searchFood } from '../services/copek-food-services';
 import ItemHorizontal from '../components/ItemHorizontal';
 import getImageThumb from '../utils/getImageThumb';
 import LoadingBase from '../components/LoadingBase';
 import ErrorBase from '../components/ErrorBase';
-import useAppSelector from '../hooks/useAppSelector';
 import { useRoute } from '@react-navigation/native';
 import { AppRouteProp } from '../types/navigation';
 import useAppNavigation from '../hooks/useAppNavigation';
+import { GeolocationContext } from '../components/GeolocationProvider';
 
 export default function ListMenuScreen(): JSX.Element {
-  const route = useRoute<AppRouteProp<'List Menu'>>()
-  const params = route.params.params
+  const route = useRoute<AppRouteProp<'List Menu'>>();
+  const params = route.params.params;
   const insets = useSafeAreaInsets();
-  const navigation = useAppNavigation()
+  const navigation = useAppNavigation();
   const [hasReachedBottom, setHasReachedBottom] = useState(false);
-  const { cityName } = useContext(CurrentGeocodeLocationContext);
-  const currentLocation = useAppSelector<SimpleLocationType | null>(
-    state => state.appReducer.currentLocation,
-  );
+  const { currentCityName } = useContext(GeocodeContext);
+  const { currentLocation } = useContext(GeolocationContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<TypeError | Error | null>(null);
   const [data, setData] = useState<FoodType[]>([]);
@@ -47,13 +44,13 @@ export default function ListMenuScreen(): JSX.Element {
         return;
       }
       if (!currentLocation) return;
-      if (!cityName) return;
+      if (!currentCityName) return;
       if (!loading) return;
       setError(null);
       try {
         const result = await searchFood(
           '',
-          cityName,
+          currentCityName,
           currentLocation,
           page,
           params?.moreCategory,
@@ -72,7 +69,7 @@ export default function ListMenuScreen(): JSX.Element {
         setLoading(false);
       }
     },
-    [hasReachedBottom, currentLocation, cityName, loading, page, params],
+    [hasReachedBottom, currentLocation, currentCityName, loading, page, params],
   );
 
   const abortController = useRef<AbortController | null>(null);
@@ -101,7 +98,14 @@ export default function ListMenuScreen(): JSX.Element {
           onLoading={() => setLoading(true)}
           hasReachedBottom={hasReachedBottom}
         >
-          <View style={{ paddingBottom: 20, paddingHorizontal: 20, gap: 20, paddingTop: 10 }}>
+          <View
+            style={{
+              paddingBottom: 20,
+              paddingHorizontal: 20,
+              gap: 20,
+              paddingTop: 10,
+            }}
+          >
             {data.map((item, i) => {
               return (
                 <ItemHorizontal
@@ -122,9 +126,9 @@ export default function ListMenuScreen(): JSX.Element {
                     navigation.navigate('Merchant', {
                       params: {
                         foodId: item.foodId,
-                        merchantId: item.merchantId
-                      }
-                    })
+                        merchantId: item.merchantId,
+                      },
+                    });
                   }}
                 />
               );

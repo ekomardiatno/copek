@@ -9,23 +9,20 @@ import ErrorBase from '../components/ErrorBase';
 import ItemHorizontal from '../components/ItemHorizontal';
 import getImageThumb from '../utils/getImageThumb';
 import { searchMerchant } from '../services/copek-food-services';
-import { CurrentGeocodeLocationContext } from '../components/CurrentGeocodeLocationProvider';
-import { SimpleLocationType } from '../redux/reducers/app.reducer';
+import { GeocodeContext } from '../components/GeocodeProvider';
 import parsingError from '../utils/parsingError';
-import useAppSelector from '../hooks/useAppSelector';
 import { useRoute } from '@react-navigation/native';
 import { AppRouteProp } from '../types/navigation';
 import { MerchantType } from '../types/merchant-types';
 import useAppNavigation from '../hooks/useAppNavigation';
+import { GeolocationContext } from '../components/GeolocationProvider';
 
 export default function ListMerchantScreen(): JSX.Element {
   const route = useRoute<AppRouteProp<'List Menu'>>()
   const navigation = useAppNavigation();
   const params = route.params.params
-  const { cityName } = useContext(CurrentGeocodeLocationContext);
-  const currentLocation = useAppSelector<SimpleLocationType | null>(
-    state => state.appReducer.currentLocation,
-  );
+  const { currentCityName } = useContext(GeocodeContext);
+  const { currentLocation } = useContext(GeolocationContext);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | TypeError | null>(null);
   const [data, setData] = useState<MerchantType[]>([]);
@@ -39,13 +36,13 @@ export default function ListMerchantScreen(): JSX.Element {
         return;
       }
       if (!currentLocation) return;
-      if (!cityName) return;
+      if (!currentCityName) return;
       if (!loading) return;
       setError(null);
       try {
         const result = await searchMerchant(
           '',
-          cityName,
+          currentCityName,
           currentLocation,
           page,
           params?.moreCategory,
@@ -64,7 +61,7 @@ export default function ListMerchantScreen(): JSX.Element {
         setLoading(false);
       }
     },
-    [hasReachedBottom, currentLocation, cityName, loading, page, params],
+    [hasReachedBottom, currentLocation, currentCityName, loading, page, params],
   );
   
     const abortController = useRef<AbortController | null>(null);
