@@ -38,11 +38,11 @@ export default function Menu({
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: 10,
-            borderColor: themeColors.grayLighter,
+            borderColor: themeColors.grayLight,
             borderWidth: 4,
           }}
         >
-          <Icon size={size ? size / 4 < 30 ? 30 : size / 4 : 30} color={colorYiq(color)} name={iconName} />
+          <Icon size={size ? size / 4 < 40 ? 40 : size / 4 : 40} color={colorYiq(color)} name={iconName} />
         </View>
         <Text
           style={{

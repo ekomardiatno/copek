@@ -31,3 +31,5 @@ export const REDUX_KEY_NAME = 'copekReduxPersist'
 
 export const LATITUDE_DELTA = 0.01
 export const LONGITUDE_DELTA = 0.01
+
+export const ROUNDED_SIZE = 20

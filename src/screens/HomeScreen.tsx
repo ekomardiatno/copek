@@ -1,8 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import { JSX, useContext, useEffect } from 'react';
-import SimpleHeader from '../components/SimpleHeader';
-import { Text, View } from 'react-native';
-import { REDUX_KEY_NAME, themeColors } from '../constants';
+import { StatusBar, Text, View } from 'react-native';
+import { REDUX_KEY_NAME, ROUNDED_SIZE, themeColors } from '../constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import { setSession } from '../redux/actions/app.action';
@@ -19,13 +18,15 @@ export default function HomeScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
   const navigation = useAppNavigation();
-  const {selectedLocation} = useAppSelector(state => state.geolocationReducer)
+  const { selectedLocation } = useAppSelector(
+    state => state.geolocationReducer,
+  );
   const {
     isGettingCurrentLocation,
     setIsGettingCurrentLocation,
     permissionGranted,
   } = useContext(GeolocationContext);
-  const geocode = useAppSelector(state => state.geocodeReducer.selectedGeocode)
+  const geocode = useAppSelector(state => state.geocodeReducer.selectedGeocode);
   const route = geocode.find(r => r.types?.find(a => a === 'route'));
 
   const handleLogout = () => {
@@ -42,27 +43,28 @@ export default function HomeScreen(): JSX.Element {
 
   useEffect(() => {
     const test = async () => {
-      const redux = await AsyncStorage.getItem(REDUX_KEY_NAME)
-      console.log(redux)
-    }
-    test()
-  }, [])
+      const redux = await AsyncStorage.getItem(REDUX_KEY_NAME);
+      console.log(redux);
+    };
+    test();
+  }, []);
 
   return (
     <>
-      <SimpleHeader />
+      <StatusBar barStyle="dark-content" />
       <View style={{ flex: 1, paddingBottom: insets.bottom }}>
         <View
           style={{
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: 16,
-            backgroundColor: themeColors.white,
+            backgroundColor: themeColors.grayLighter,
             flexDirection: 'row',
             paddingHorizontal: 20,
             paddingVertical: 15,
             borderBottomWidth: 1,
             borderBottomColor: themeColors.grayLight,
+            paddingTop: insets.top + 15,
           }}
         >
           <Text
@@ -82,7 +84,7 @@ export default function HomeScreen(): JSX.Element {
                 if (!isGettingCurrentLocation && !permissionGranted) {
                   setIsGettingCurrentLocation(true);
                 } else {
-                  navigation.navigate('SelectLocation')
+                  navigation.navigate('SelectLocation');
                 }
               }}
             >
@@ -93,7 +95,7 @@ export default function HomeScreen(): JSX.Element {
                   gap: 3,
                   borderWidth: 1,
                   borderColor: themeColors.borderColorGray,
-                  borderRadius: 100,
+                  borderRadius: ROUNDED_SIZE,
                   paddingVertical: 5,
                   paddingHorizontal: 5,
                   paddingRight: 10,
@@ -150,7 +152,7 @@ export default function HomeScreen(): JSX.Element {
                 style={{
                   height: 38,
                   width: 38,
-                  borderRadius: 38,
+                  borderRadius: ROUNDED_SIZE,
                   borderWidth: 1,
                   borderColor: themeColors.borderColorGray,
                   justifyContent: 'center',

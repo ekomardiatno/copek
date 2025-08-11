@@ -10,7 +10,7 @@ import {
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SimpleHeader from '../../components/SimpleHeader';
-import { themeColors } from '../../constants';
+import { ROUNDED_SIZE, themeColors } from '../../constants';
 import Icon from '../../components/Icon';
 import ItemContainer from '../../components/ItemContainer';
 import ItemVertical from '../../components/ItemVertical';
@@ -109,7 +109,7 @@ export default function FoodScreen(): JSX.Element {
     <View style={{ flex: 1, paddingBottom: insets.bottom }}>
       <SimpleHeader title="Makanan & Minuman" />
       <Pressable
-        style={{ borderRadius: 10, marginHorizontal: 15, marginBottom: 15 }}
+        style={{ borderRadius: ROUNDED_SIZE, marginHorizontal: 15, marginBottom: 15 }}
         onPress={() => {
           navigation.navigate('SearchMenu');
         }}
@@ -150,7 +150,7 @@ export default function FoodScreen(): JSX.Element {
                 padding: 10,
                 paddingHorizontal: 20,
                 backgroundColor: themeColors.red,
-                borderRadius: 5,
+                borderRadius: ROUNDED_SIZE,
               }}
             >
               <Text style={{ color: themeColors.white, textAlign: 'center' }}>

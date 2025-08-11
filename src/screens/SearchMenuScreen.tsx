@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { themeColors } from '../constants';
+import { ROUNDED_SIZE, themeColors } from '../constants';
 import Input from '../components/Input';
 import { searchFood } from '../services/copek-food-services';
 import { GeocodeContext } from '../components/GeocodeProvider';
@@ -154,7 +154,7 @@ export default function SearchMenuScreen(): JSX.Element {
                 padding: 10,
                 paddingHorizontal: 20,
                 backgroundColor: themeColors.red,
-                borderRadius: 5,
+                borderRadius: ROUNDED_SIZE,
               }}
             >
               <Text style={{ color: themeColors.white, textAlign: 'center' }}>

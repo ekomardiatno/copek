@@ -2,7 +2,7 @@
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, Text, TextInput, ToastAndroid, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { themeColors } from '../constants';
+import { ROUNDED_SIZE, themeColors } from '../constants';
 import SimpleHeader from '../components/SimpleHeader';
 import { colorYiq } from '../utils';
 import Icon from '../components/Icon';
@@ -393,7 +393,7 @@ export default function RegisterScreen(): JSX.Element {
                 style={{
                   backgroundColor: themeColors.red,
                   paddingVertical: 12,
-                  borderRadius: 100,
+                  borderRadius: ROUNDED_SIZE,
                   alignItems: 'center',
                   marginBottom: 15,
                   opacity: isRegistering ? 0.5 : 1,

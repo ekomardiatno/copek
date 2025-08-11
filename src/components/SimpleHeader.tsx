@@ -43,7 +43,7 @@ export default function SimpleHeader({
                   height: 40,
                   marginHorizontal: 5,
                   width: 40,
-                  borderRadius: 40 / 2,
+                  borderRadius: 20,
                   overflow: 'hidden',
                   alignItems: 'center',
                   justifyContent: 'center',

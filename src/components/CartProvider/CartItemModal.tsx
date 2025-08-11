@@ -7,7 +7,7 @@ import { CartType } from '../../redux/reducers/cart.reducer';
 import Modal from '../Modal';
 import { CartContext } from '.';
 import { Text, View } from 'react-native';
-import { themeColors } from '../../constants';
+import { ROUNDED_SIZE, themeColors } from '../../constants';
 import modCurrency from '../../utils/modCurrency';
 import Icon from '../Icon';
 import Input from '../Input';
@@ -166,7 +166,7 @@ export default function CartItemModal(): JSX.Element {
                     style={{
                       width: 28,
                       height: 28,
-                      borderRadius: 28 / 2,
+                      borderRadius: ROUNDED_SIZE,
                       borderWidth: 1,
                       borderColor: themeColors.borderColor,
                       alignItems: 'center',
@@ -211,7 +211,7 @@ export default function CartItemModal(): JSX.Element {
                     style={{
                       width: 28,
                       height: 28,
-                      borderRadius: 28 / 2,
+                      borderRadius: ROUNDED_SIZE,
                       borderWidth: 1,
                       borderColor: themeColors.borderColor,
                       alignItems: 'center',

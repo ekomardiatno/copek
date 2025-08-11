@@ -120,7 +120,7 @@ export default function CartProvider({
               backgroundColor: themeColors.primary,
               paddingHorizontal: 18,
               paddingVertical: 6,
-              borderRadius: 100,
+              borderRadius: 20,
               elevation: 5,
             }}
           >

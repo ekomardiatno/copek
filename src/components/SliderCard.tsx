@@ -102,7 +102,7 @@ export default function SliderCard({
                 style={{
                   width: width,
                   height: height,
-                  borderRadius: 8,
+                  borderRadius: 20,
                   alignItems: 'center',
                   justifyContent: 'center',
                   overflow: 'hidden',
@@ -139,7 +139,7 @@ export default function SliderCard({
               style={{
                 width: 12,
                 height: 12,
-                borderRadius: 6,
+                borderRadius: 20,
                 marginLeft: i === 0 ? 0 : 5,
                 borderWidth: 2,
                 borderColor:

@@ -189,7 +189,7 @@ export default function FoodItem({
                 style={{
                   width: 120,
                   height: 120,
-                  borderRadius: 10,
+                  borderRadius: 20,
                   elevation: 2,
                 }}
               >
@@ -197,7 +197,7 @@ export default function FoodItem({
                   style={{
                     width: '100%',
                     height: '100%',
-                    borderRadius: 10,
+                    borderRadius: 20,
                   }}
                   source={{
                     uri: getImageThumb(item.foodPicture, 'sm'),
@@ -238,7 +238,7 @@ export default function FoodItem({
                   <View
                     style={{
                       height: 32,
-                      borderRadius: 32 / 2,
+                      borderRadius: 20,
                       overflow: 'hidden',
                       paddingHorizontal: 8,
                       borderColor: themeColors.primary,

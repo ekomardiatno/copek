@@ -27,7 +27,7 @@ export default function ItemVertical({
       style={{ flex: 1 }}
     >
       <View style={{
-        borderRadius: 10,
+        borderRadius: 20,
         overflow: 'hidden',
         width: 140,
         marginBottom: 2,

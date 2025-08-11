@@ -35,7 +35,7 @@ export default function Input({
           {
             flexDirection: 'row',
             backgroundColor: themeColors.grayLighter,
-            borderRadius: 12,
+            borderRadius: 20,
             paddingHorizontal: 15,
             borderWidth: 1,
             borderColor: themeColors.borderColor,

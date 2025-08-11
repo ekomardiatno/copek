@@ -302,7 +302,6 @@ export default function MerchantScreen(): JSX.Element {
           }}
         >
           <Pressable
-            style={{ borderRadius: 3 }}
             disabled={!merchantDetail}
             onPress={() =>
               Linking.openURL(
@@ -316,7 +315,7 @@ export default function MerchantScreen(): JSX.Element {
                   elevation: 5,
                   height: 60,
                   width: 60,
-                  borderRadius: 60 / 2,
+                  borderRadius: 20,
                   alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: themeColors.primary,

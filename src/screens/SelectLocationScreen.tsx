@@ -2,7 +2,7 @@
 import { JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GestureResponderEvent, Image, Text, View } from 'react-native';
 import MapView from 'react-native-maps';
-import { LATITUDE_DELTA, LONGITUDE_DELTA, themeColors } from '../constants';
+import { LATITUDE_DELTA, LONGITUDE_DELTA, ROUNDED_SIZE, themeColors } from '../constants';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -54,7 +54,7 @@ const CustomButton = ({
         paddingHorizontal: 10,
         borderWidth: 1,
         borderColor: themeColors.borderColor,
-        borderRadius: 100,
+        borderRadius: ROUNDED_SIZE,
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
@@ -423,7 +423,7 @@ export default function SelectLocationScreen(): JSX.Element {
                   width: 40,
                   height: 40,
                   backgroundColor: themeColors.white,
-                  borderRadius: 40,
+                  borderRadius: ROUNDED_SIZE,
                   left: -13,
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -601,7 +601,7 @@ export default function SelectLocationScreen(): JSX.Element {
                           style={{
                             borderWidth: 1,
                             borderColor: themeColors.borderColor,
-                            borderRadius: 20,
+                            borderRadius: ROUNDED_SIZE,
                             padding: 20,
                           }}
                         >

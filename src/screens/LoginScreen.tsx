@@ -8,7 +8,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import { themeColors } from '../constants';
+import { ROUNDED_SIZE, themeColors } from '../constants';
 import { colorYiq } from '../utils';
 import SimpleHeader from '../components/SimpleHeader';
 import { useDispatch } from 'react-redux';
@@ -295,7 +295,7 @@ export default function LoginScreen() {
               style={{
                 backgroundColor: themeColors.red,
                 paddingVertical: 12,
-                borderRadius: 100,
+                borderRadius: ROUNDED_SIZE,
                 alignItems: 'center',
                 opacity: isLoggingIn ? 0.5 : 1,
               }}

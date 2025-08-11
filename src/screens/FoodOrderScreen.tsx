@@ -3,7 +3,7 @@ import { JSX, useContext } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SimpleHeader from '../components/SimpleHeader';
 import { ScrollView, Text, View } from 'react-native';
-import { themeColors } from '../constants';
+import { ROUNDED_SIZE, themeColors } from '../constants';
 import { GeocodeContext } from '../components/GeocodeProvider';
 import Input from '../components/Input';
 import useAppSelector from '../hooks/useAppSelector';
@@ -45,7 +45,7 @@ export default function FoodOrderSecreen(): JSX.Element {
                   borderColor: themeColors.borderColor,
                   backgroundColor: themeColors.white,
                   padding: 15,
-                  borderRadius: 15,
+                  borderRadius: ROUNDED_SIZE,
                 }}
               >
                 <View
@@ -68,7 +68,7 @@ export default function FoodOrderSecreen(): JSX.Element {
                         backgroundColor: themeColors.white,
                         borderColor: themeColors.primary,
                         borderWidth: 1,
-                        borderRadius: 22,
+                        borderRadius: ROUNDED_SIZE,
                         alignItems: 'center',
                         justifyContent: 'center',
                         paddingVertical: 3,
@@ -123,7 +123,7 @@ export default function FoodOrderSecreen(): JSX.Element {
                   backgroundColor: themeColors.white,
                   padding: 15,
                   marginTop: 20,
-                  borderRadius: 15,
+                  borderRadius: ROUNDED_SIZE,
                 }}
               >
                 {cart.length > 0 && (
@@ -208,7 +208,7 @@ export default function FoodOrderSecreen(): JSX.Element {
                   backgroundColor: themeColors.white,
                   padding: 15,
                   marginTop: 20,
-                  borderRadius: 15,
+                  borderRadius: ROUNDED_SIZE,
                 }}
               >
                 <View>
