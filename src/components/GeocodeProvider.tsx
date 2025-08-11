@@ -1,21 +1,19 @@
 import React, {
   createContext,
   JSX,
-  useCallback,
-  useContext,
-  useEffect,
+  useCallback, useEffect,
   useRef,
-  useState,
+  useState
 } from 'react';
 import { getGeocode } from '../services/google-services';
 import { PlaceType } from '../types/google-map-types';
-import { GeolocationContext } from './GeolocationProvider';
 import { generateCityAndRouteName } from '../utils';
 import { SimpleLocationType } from '../redux/reducers/app.reducer';
+import useAppSelector from '../hooks/useAppSelector';
+import { useDispatch } from 'react-redux';
+import { setCurrentGeocode, setSelectedGeocode } from '../redux/actions/geocode.action';
 
 export const GeocodeContext = createContext<{
-  currentGeocode: PlaceType[];
-  selectedGeocode: PlaceType[];
   loadingCurrentGeocode: boolean;
   setLoadingCurrentGeocode: React.Dispatch<React.SetStateAction<boolean>>;
   loadingSelectedGeocode: boolean;
@@ -27,8 +25,6 @@ export const GeocodeContext = createContext<{
   selectedCityName: string;
   selectedRouteName: string;
 }>({
-  currentGeocode: [],
-  selectedGeocode: [],
   loadingCurrentGeocode: false,
   setLoadingCurrentGeocode: () => {},
   loadingSelectedGeocode: false,
@@ -46,9 +42,11 @@ export default function GeocodeProvider({
 }: {
   children: JSX.Element;
 }): JSX.Element {
-  const { currentLocation, selectedLocation } = useContext(GeolocationContext);
-  const [currentGeocode, setCurrentGeocode] = useState<PlaceType[]>([]);
-  const [selectedGeocode, setSelectedGeocode] = useState<PlaceType[]>([]);
+  const {currentGeolocation: currentLocation, selectedLocation} = useAppSelector(state => state.geolocationReducer)
+  const { currentGeocode, selectedGeocode } = useAppSelector(state => state.geocodeReducer)
+  const dispatch = useDispatch()
+  // const [currentGeocode, setCurrentGeocode] = useState<PlaceType[]>([]);
+  // const [selectedGeocode, setSelectedGeocode] = useState<PlaceType[]>([]);
   const [loadingCurrentGeocode, setLoadingCurrentGeocode] = useState(false);
   const [loadingSelectedGeocode, setLoadingSelectedGeocode] = useState(false);
   const [currentGeocodeRequestError, setCurrentGeocodeRequestError] = useState<
@@ -83,7 +81,7 @@ export default function GeocodeProvider({
   }: {
     loading: boolean;
     location: SimpleLocationType | null;
-    setGeocode: React.Dispatch<React.SetStateAction<PlaceType[]>>;
+    setGeocode: (geocode: PlaceType[]) => void;
     setRequestError: React.Dispatch<
       React.SetStateAction<Error | TypeError | null>
     >;
@@ -112,27 +110,31 @@ export default function GeocodeProvider({
       handleFetchGeocode({
         loading: loadingCurrentGeocode,
         location: currentLocation,
-        setGeocode: setCurrentGeocode,
+        setGeocode: (geocode: PlaceType[]) => {
+          dispatch(setCurrentGeocode(geocode))
+        },
         setRequestError: setCurrentGeocodeRequestError,
         setLoading: setLoadingCurrentGeocode,
         signal: signal,
       });
     },
-    [currentLocation, loadingCurrentGeocode],
+    [currentLocation, dispatch, loadingCurrentGeocode],
   );
 
   const fetchSelectedGeocode = useCallback(
     async (signal?: AbortSignal) => {
       handleFetchGeocode({
-        loading: loadingCurrentGeocode,
+        loading: loadingSelectedGeocode,
         location: selectedLocation,
-        setGeocode: setSelectedGeocode,
+        setGeocode: (geocode: PlaceType[]) => {
+          dispatch(setSelectedGeocode(geocode))
+        },
         setRequestError: setSelectedGeocodeRequestError,
         setLoading: setLoadingSelectedGeocode,
         signal: signal,
       });
     },
-    [loadingCurrentGeocode, selectedLocation],
+    [dispatch, loadingSelectedGeocode, selectedLocation],
   );
 
   const abortController = useRef<AbortController | null>(null);
@@ -168,8 +170,6 @@ export default function GeocodeProvider({
   return (
     <GeocodeContext.Provider
       value={{
-        currentGeocode,
-        selectedGeocode,
         loadingCurrentGeocode,
         setLoadingCurrentGeocode,
         loadingSelectedGeocode,
@@ -179,7 +179,7 @@ export default function GeocodeProvider({
         currentCityName,
         currentRouteName,
         selectedCityName,
-        selectedRouteName
+        selectedRouteName,
       }}
     >
       {children}

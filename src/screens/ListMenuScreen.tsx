@@ -22,7 +22,7 @@ import ErrorBase from '../components/ErrorBase';
 import { useRoute } from '@react-navigation/native';
 import { AppRouteProp } from '../types/navigation';
 import useAppNavigation from '../hooks/useAppNavigation';
-import { GeolocationContext } from '../components/GeolocationProvider';
+import useAppSelector from '../hooks/useAppSelector';
 
 export default function ListMenuScreen(): JSX.Element {
   const route = useRoute<AppRouteProp<'List Menu'>>();
@@ -31,7 +31,9 @@ export default function ListMenuScreen(): JSX.Element {
   const navigation = useAppNavigation();
   const [hasReachedBottom, setHasReachedBottom] = useState(false);
   const { currentCityName } = useContext(GeocodeContext);
-  const { currentLocation } = useContext(GeolocationContext);
+  const { currentGeolocation: currentLocation } = useAppSelector(
+    state => state.geolocationReducer,
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<TypeError | Error | null>(null);
   const [data, setData] = useState<FoodType[]>([]);
@@ -94,7 +96,6 @@ export default function ListMenuScreen(): JSX.Element {
         <ErrorBase error={error} onReload={() => setLoading(true)} />
       ) : (
         <InfiniteScroll
-          loading={loading}
           onLoading={() => setLoading(true)}
           hasReachedBottom={hasReachedBottom}
         >

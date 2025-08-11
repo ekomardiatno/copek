@@ -15,14 +15,16 @@ import { useRoute } from '@react-navigation/native';
 import { AppRouteProp } from '../types/navigation';
 import { MerchantType } from '../types/merchant-types';
 import useAppNavigation from '../hooks/useAppNavigation';
-import { GeolocationContext } from '../components/GeolocationProvider';
+import useAppSelector from '../hooks/useAppSelector';
 
 export default function ListMerchantScreen(): JSX.Element {
   const route = useRoute<AppRouteProp<'List Menu'>>()
   const navigation = useAppNavigation();
   const params = route.params.params
   const { currentCityName } = useContext(GeocodeContext);
-  const { currentLocation } = useContext(GeolocationContext);
+  const { currentGeolocation: currentLocation } = useAppSelector(
+    state => state.geolocationReducer,
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | TypeError | null>(null);
   const [data, setData] = useState<MerchantType[]>([]);
@@ -86,7 +88,6 @@ export default function ListMerchantScreen(): JSX.Element {
           <ErrorBase error={error} onReload={() => setLoading(true)} />
         ) : (
           <InfiniteScroll
-            loading={loading}
             onLoading={() => setLoading(true)}
             hasReachedBottom={hasReachedBottom}
           >

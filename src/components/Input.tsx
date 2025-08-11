@@ -18,6 +18,7 @@ export default function Input({
   styleTextInput,
   iconStyle,
   iconSize,
+  iconColor,
   ...props
 }: TextInputProps & {
   style?: StyleProp<ViewStyle>;
@@ -25,6 +26,7 @@ export default function Input({
   styleTextInput?: StyleProp<TextStyle>;
   iconStyle?: StyleProp<ViewStyle>;
   iconSize?: number;
+  iconColor?: string
 }): JSX.Element {
   return (
     <View>
@@ -51,19 +53,18 @@ export default function Input({
               paddingVertical: 14
             }, iconStyle]}
           >
-            <Icon name={iconName} color={themeColors.grayDark} size={iconSize || 16} />
+            <Icon name={iconName} color={iconColor || themeColors.grayDark} size={iconSize || 16} />
           </View>
         )}
         <TextInput
           {...props}
-          placeholderTextColor={themeColors.gray}
+          placeholderTextColor={themeColors.textHint}
           style={[
             {
               color: themeColors.black,
               fontFamily: 'Yantramanav',
               flex: 1,
               padding: 0,
-              letterSpacing: 1,
               paddingVertical: 12,
               fontSize: 15,
             },

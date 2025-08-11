@@ -36,7 +36,7 @@ import FoodItem, { FoodItemContext } from '../components/FoodItem';
 import { MerchantContext } from '../components/MerchantProvider';
 import { CartContext } from '../components/CartProvider';
 import Pressable from '../components/Pressable';
-import { GeolocationContext } from '../components/GeolocationProvider';
+import useAppSelector from '../hooks/useAppSelector';
 
 export default function MerchantScreen(): JSX.Element {
   const route = useRoute<AppRouteProp<'Merchant'>>();
@@ -45,7 +45,9 @@ export default function MerchantScreen(): JSX.Element {
   const frame = useSafeAreaFrame();
   const navigation = useAppNavigation();
   const [isMerchantLoading, setIsMerchantLoading] = useState(true);
-  const { currentLocation } = useContext(GeolocationContext);
+  const { currentGeolocation: currentLocation } = useAppSelector(
+    state => state.geolocationReducer,
+  );
   const [merchantRequestError, setMerchantRequestError] = useState<
     TypeError | Error | null
   >(null);

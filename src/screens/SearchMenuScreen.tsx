@@ -22,11 +22,13 @@ import SimpleHeader from '../components/SimpleHeader';
 import InfiniteScroll from '../components/InfiniteScroll';
 import useAppNavigation from '../hooks/useAppNavigation';
 import Pressable from '../components/Pressable';
-import { GeolocationContext } from '../components/GeolocationProvider';
+import useAppSelector from '../hooks/useAppSelector';
 export default function SearchMenuScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
   const { currentCityName } = useContext(GeocodeContext);
-  const { currentLocation } = useContext(GeolocationContext);
+  const { currentGeolocation: currentLocation } = useAppSelector(
+    state => state.geolocationReducer,
+  );
   const navigation = useAppNavigation();
   const timeoutFetch = useRef<NodeJS.Timeout | null>(null);
   const [search, setSearch] = useState<string>('');
@@ -163,7 +165,6 @@ export default function SearchMenuScreen(): JSX.Element {
         </View>
       ) : (
         <InfiniteScroll
-          loading={loading}
           onLoading={() => setLoading(true)}
           hasReachedBottom={isAllLoaded}
         >

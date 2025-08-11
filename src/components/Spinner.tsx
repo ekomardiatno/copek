@@ -37,7 +37,7 @@ export const Spinner: React.FC<SpinnerProps> = ({
   color = themeColors.primary,
   thickness = 3,
   speed = 800,
-  showIndicator = true,
+  showIndicator = false,
   label,
   style,
 }) => {

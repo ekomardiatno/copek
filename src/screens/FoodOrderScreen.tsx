@@ -17,7 +17,7 @@ import Pressable from '../components/Pressable';
 
 export default function FoodOrderSecreen(): JSX.Element {
   const insets = useSafeAreaInsets();
-  const { currentRouteName } = useContext(GeocodeContext);
+  const { selectedRouteName } = useContext(GeocodeContext);
   const cart = useAppSelector(state => state.cartReducer.cart);
   const navigation = useAppNavigation();
   return (
@@ -50,7 +50,7 @@ export default function FoodOrderSecreen(): JSX.Element {
               >
                 <View
                   style={{
-                    marginBottom: 10,
+                    marginBottom: 15,
                     flexDirection: 'row',
                     alignItems: 'center',
                     gap: 10,
@@ -74,6 +74,9 @@ export default function FoodOrderSecreen(): JSX.Element {
                         paddingVertical: 3,
                         paddingHorizontal: 12,
                       }}
+                      onPress={() => {
+                        navigation.navigate('SelectLocation')
+                      }}
                     >
                       <Text
                         style={{
@@ -94,8 +97,8 @@ export default function FoodOrderSecreen(): JSX.Element {
                   }}
                 >
                   <View style={{ flex: 1, gap: 5 }}>
-                    <Text style={{ fontSize: 14, fontWeight: '400' }}>
-                      {currentRouteName}
+                    <Text style={{ fontSize: 14, fontWeight: '300' }}>
+                      {selectedRouteName}
                     </Text>
                   </View>
                 </View>

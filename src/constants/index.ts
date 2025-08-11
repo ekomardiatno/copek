@@ -21,9 +21,13 @@ export const themeColors = {
   primary: '#eab308',
   secondary: '#e11d48',
   textColor: colors.black,
-  textMuted: '#374151',
+  textMuted: '#6b7280',
+  textHint: '#9ca3af',
   borderColor: '#e5e7eb',
   borderColorGray: '#9ca3af',
 };
 
 export const REDUX_KEY_NAME = 'copekReduxPersist'
+
+export const LATITUDE_DELTA = 0.01
+export const LONGITUDE_DELTA = 0.01

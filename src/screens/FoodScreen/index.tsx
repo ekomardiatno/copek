@@ -22,22 +22,19 @@ import {
 } from '../../types/food-collection-types';
 import Spinner from '../../components/Spinner';
 import getImageThumb from '../../utils/getImageThumb';
-import { GeocodeContext } from '../../components/GeocodeProvider';
 import useAppNavigation from '../../hooks/useAppNavigation';
 import { MerchantType } from '../../types/merchant-types';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import { CartContext } from '../../components/CartProvider';
 import Pressable from '../../components/Pressable';
 import Input from '../../components/Input';
-import { GeolocationContext } from '../../components/GeolocationProvider';
+import useAppSelector from '../../hooks/useAppSelector';
 
 export default function FoodScreen(): JSX.Element {
   const navigation = useAppNavigation();
   const insets = useSafeAreaInsets();
-  const { currentLocation } = useContext(GeolocationContext);
-  const { currentGeocode: geocode } = useContext(
-    GeocodeContext,
-  );
+  const {currentGeolocation: currentLocation} = useAppSelector(state => state.geolocationReducer)
+  const geocode = useAppSelector(state => state.geocodeReducer.selectedGeocode)
   const [cityName, setCityName] = useState<string>('');
   const [isLoadingCollection, setIsLoadingCollection] = useState(true);
   const [collectionRequestError, setCollectionRequestError] = useState<

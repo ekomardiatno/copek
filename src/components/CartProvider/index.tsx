@@ -13,7 +13,6 @@ import useAppNavigation from '../../hooks/useAppNavigation';
 import Pressable from '../Pressable';
 
 const initialSharedValue = {
-  scale: 1,
   bottom: -150,
 };
 
@@ -60,7 +59,6 @@ export default function CartProvider({
     return total + item.qty * (Number(item.foodPrice) - Number(item.foodDiscount) / 100 * Number(item.foodPrice));
   }, 0);
 
-  const scale = useSharedValue(initialSharedValue.scale);
   const bottom = useSharedValue(initialSharedValue.bottom);
 
   const showProccedToCheckoutButton = () => {
@@ -87,8 +85,6 @@ export default function CartProvider({
     }
   }, [bottom, cart.length, hideProccedToCheckoutButton, currentScreen]);
 
-  console.log(isOpenCartItemModal)
-
   return (
     <CartContext.Provider
       value={{
@@ -110,25 +106,14 @@ export default function CartProvider({
             left: 0,
             right: 0,
             zIndex: 100,
-            marginBottom: insets.bottom,
-            transform: [
-              {
-                scale,
-              },
-            ],
+            marginBottom: insets.bottom
           },
         ]}
       >
         <View style={{ margin: 20, marginHorizontal: 15 }}>
           <Pressable
-            onPressIn={() => {
-              scale.value = withSpring(0.95);
-            }}
             onPress={() => {
               navigation.navigate('FoodOrder')
-            }}
-            onPressOut={() => {
-              scale.value = withSpring(1);
             }}
             underlayColor={themeColors.primary}
             style={{

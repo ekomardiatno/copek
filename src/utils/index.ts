@@ -61,7 +61,7 @@ export function generateCityAndRouteName(geocode: PlaceType[]): {
     );
     cityName = city?.short_name || '';
   } else {
-    const city = geocode[0].address_components?.find(row =>
+    const city = geocode[0]?.address_components?.find(row =>
       row.types?.includes('administrative_area_level_2'),
     );
     cityName = city?.short_name || '';

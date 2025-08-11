@@ -4,13 +4,15 @@ import {
   StyleProp,
   TouchableHighlight,
   TouchableHighlightProps,
-  ViewStyle
+  Vibration,
+  ViewStyle,
 } from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 
 export default function Pressable({
   onPressIn,
   onPressOut,
+  onPress,
   children,
   underlayColor,
   activeOpacity,
@@ -20,7 +22,7 @@ export default function Pressable({
   ...props
 }: TouchableHighlightProps & {
   activeScale?: number;
-  viewStyle?: StyleProp<ViewStyle>
+  viewStyle?: StyleProp<ViewStyle>;
 }): JSX.Element {
   const scale = useSharedValue(1);
   return (
@@ -34,6 +36,11 @@ export default function Pressable({
           duration: 100,
         });
         if (onPressIn) onPressIn(e);
+        Vibration.vibrate(10);
+      }}
+      onPress={e => {
+        Vibration.vibrate([0, 5, 20, 5]);
+        if (onPress) onPress(e);
       }}
       onPressOut={e => {
         scale.value = withSpring(1, {
@@ -42,7 +49,9 @@ export default function Pressable({
         if (onPressOut) onPressOut(e);
       }}
     >
-      <Animated.View style={[{ transform: [{ scale }], flexGrow: 1 }, viewStyle]}>
+      <Animated.View
+        style={[{ transform: [{ scale }], flexGrow: 1 }, viewStyle]}
+      >
         {children}
       </Animated.View>
     </TouchableHighlight>

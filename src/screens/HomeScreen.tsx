@@ -1,26 +1,31 @@
 /* eslint-disable react-native/no-inline-styles */
-import { JSX, useContext } from 'react';
+import { JSX, useContext, useEffect } from 'react';
 import SimpleHeader from '../components/SimpleHeader';
 import { Text, View } from 'react-native';
-import { themeColors } from '../constants';
-import {
-  useSafeAreaInsets
-} from 'react-native-safe-area-context';
+import { REDUX_KEY_NAME, themeColors } from '../constants';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import { setSession } from '../redux/actions/app.action';
 import Menu from '../components/homeComponents/Menu';
 import Icon from '../components/Icon';
-import { GeocodeContext } from '../components/GeocodeProvider';
 import useAppNavigation from '../hooks/useAppNavigation';
 import Pressable from '../components/Pressable';
 import { GeolocationContext } from '../components/GeolocationProvider';
+import Spinner from '../components/Spinner';
+import useAppSelector from '../hooks/useAppSelector';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
   const navigation = useAppNavigation();
-  const {isGettingCurrentLocation, currentLocation} = useContext(GeolocationContext)
-  const {currentGeocode: geocode} = useContext(GeocodeContext);
+  const {selectedLocation} = useAppSelector(state => state.geolocationReducer)
+  const {
+    isGettingCurrentLocation,
+    setIsGettingCurrentLocation,
+    permissionGranted,
+  } = useContext(GeolocationContext);
+  const geocode = useAppSelector(state => state.geocodeReducer.selectedGeocode)
   const route = geocode.find(r => r.types?.find(a => a === 'route'));
 
   const handleLogout = () => {
@@ -34,6 +39,14 @@ export default function HomeScreen(): JSX.Element {
       ],
     });
   };
+
+  useEffect(() => {
+    const test = async () => {
+      const redux = await AsyncStorage.getItem(REDUX_KEY_NAME)
+      console.log(redux)
+    }
+    test()
+  }, [])
 
   return (
     <>
@@ -63,45 +76,75 @@ export default function HomeScreen(): JSX.Element {
             COPEK
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 3,
-                borderWidth: 1,
-                borderColor: themeColors.borderColorGray,
-                borderRadius: 100,
-                paddingVertical: 5,
-                paddingHorizontal: 5,
-                paddingRight: 10,
+            <Pressable
+              viewStyle={{ flexGrow: 0 }}
+              onPress={() => {
+                if (!isGettingCurrentLocation && !permissionGranted) {
+                  setIsGettingCurrentLocation(true);
+                } else {
+                  navigation.navigate('SelectLocation')
+                }
               }}
             >
               <View
                 style={{
-                  width: 25,
-                  height: 25,
+                  flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  gap: 3,
+                  borderWidth: 1,
+                  borderColor: themeColors.borderColorGray,
+                  borderRadius: 100,
+                  paddingVertical: 5,
+                  paddingHorizontal: 5,
+                  paddingRight: 10,
                 }}
               >
-                <Icon
-                  name="location-dot"
-                  color={themeColors.textColor}
-                  size={14}
-                />
+                <View
+                  style={{
+                    width: 25,
+                    height: 25,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {isGettingCurrentLocation ? (
+                    <Spinner showIndicator={false} size={15} />
+                  ) : !permissionGranted ? (
+                    <Icon
+                      name="triangle-exclamation"
+                      color={themeColors.red}
+                      size={14}
+                    />
+                  ) : (
+                    <Icon
+                      name="location-dot"
+                      color={themeColors.textColor}
+                      size={14}
+                    />
+                  )}
+                </View>
+
+                <Text
+                  style={{
+                    color: themeColors.black,
+                    fontSize: 11,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {isGettingCurrentLocation ? (
+                    `Mencari lokasi...`
+                  ) : !permissionGranted ? (
+                    `Izinkan lokasi`
+                  ) : (
+                    <>
+                      {route && route.formatted_address
+                        ? route.formatted_address.split(',')[0].trim()
+                        : `${selectedLocation?.latitude}, ${selectedLocation?.longitude}`}
+                    </>
+                  )}
+                </Text>
               </View>
-              <Text
-                style={{
-                  color: themeColors.black,
-                  fontSize: 11,
-                  fontWeight: 'bold',
-                }}
-              >
-                {route && route.formatted_address
-                  ? route.formatted_address.split(',')[0].trim()
-                  : `${currentLocation?.latitude}, ${currentLocation?.longitude}`}
-              </Text>
-            </View>
+            </Pressable>
             <Pressable onPress={handleLogout}>
               <View
                 style={{
@@ -142,7 +185,7 @@ export default function HomeScreen(): JSX.Element {
               iconName="motorcycle"
               onPress={() => {}}
               color={themeColors.green}
-              disabled={currentLocation === null || isGettingCurrentLocation}
+              disabled={selectedLocation === null || isGettingCurrentLocation}
             />
             <Menu
               title="Food"
@@ -152,7 +195,7 @@ export default function HomeScreen(): JSX.Element {
                 navigation.navigate('Food');
               }}
               color={themeColors.red}
-              disabled={currentLocation === null || isGettingCurrentLocation}
+              disabled={selectedLocation === null || isGettingCurrentLocation}
             />
           </View>
         </View>
