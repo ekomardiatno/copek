@@ -19,7 +19,7 @@ const colors = {
 export const themeColors = {
   ...colors,
   primary: '#eab308',
-  secondary: '#e11d48',
+  secondary: '#2563eb',
   textColor: colors.black,
   textMuted: '#6b7280',
   textHint: '#9ca3af',

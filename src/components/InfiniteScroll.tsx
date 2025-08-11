@@ -7,12 +7,14 @@ import Animated, { AnimatedScrollViewProps } from 'react-native-reanimated';
 export default function InfiniteScroll({
   children,
   onLoading,
-  hasReachedBottom,
+  loading,
+  hasReachedBottom = true,
   ...props
 }: AnimatedScrollViewProps & {
   children: React.ReactNode | JSX.Element;
-  onLoading: () => void;
-  hasReachedBottom: boolean;
+  onLoading?: () => void;
+  hasReachedBottom?: boolean;
+  loading?: boolean;
 }): JSX.Element {
   const scrollRef = useRef<Animated.ScrollView | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -35,12 +37,14 @@ export default function InfiniteScroll({
             70
         ) {
           if (!hasReachedBottom) {
-            onLoading();
-            scrollRef.current?.scrollTo({
-              y: e.nativeEvent.contentOffset.y + 70,
-              x: 0,
-              animated: true,
-            });
+            if(onLoading && !loading) {
+              onLoading();
+              scrollRef.current?.scrollTo({
+                y: e.nativeEvent.contentOffset.y + 70,
+                x: 0,
+                animated: true,
+              });
+            }
           }
         }
       }}

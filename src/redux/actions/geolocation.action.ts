@@ -3,9 +3,10 @@ import { PermissionStatus as PermissionIosStatus } from 'react-native-permission
 import { SimpleLocationType } from '../reducers/app.reducer';
 import {
   SET_CURRENT_GEOLOCATION,
+  SET_DESTINATION_LOCATION,
   SET_PERMISSION_ANDROID,
   SET_PERMISSION_IOS,
-  SET_SELECTED_GEOLOCATION,
+  SET_SELECTED_LOCATION,
 } from '../types';
 import { GeolocationResponse } from '@react-native-community/geolocation';
 
@@ -17,7 +18,14 @@ export const setCurrentGeolocation = (location: GeolocationResponse['coords'] | 
 export const setSelectedLocation = (
   location: SimpleLocationType | null,
 ) => ({
-  type: SET_SELECTED_GEOLOCATION,
+  type: SET_SELECTED_LOCATION,
+  payload: location,
+});
+
+export const setDestinationLocation = (
+  location: SimpleLocationType | null,
+) => ({
+  type: SET_DESTINATION_LOCATION,
   payload: location,
 });
 

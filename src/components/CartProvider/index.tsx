@@ -5,7 +5,7 @@ import CartItemModal from './CartItemModal';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useAppSelector from '../../hooks/useAppSelector';
-import { themeColors } from '../../constants';
+import { ROUNDED_SIZE, themeColors } from '../../constants';
 import modCurrency from '../../utils/modCurrency';
 import Icon from '../Icon';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
@@ -120,7 +120,7 @@ export default function CartProvider({
               backgroundColor: themeColors.primary,
               paddingHorizontal: 18,
               paddingVertical: 6,
-              borderRadius: 20,
+              borderRadius: ROUNDED_SIZE,
               elevation: 5,
             }}
           >

@@ -24,7 +24,7 @@ import {
 import parsingError from '../utils/parsingError';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 import Icon from '../components/Icon';
-import { themeColors } from '../constants';
+import { ROUNDED_SIZE, themeColors } from '../constants';
 import LinearGradient from 'react-native-linear-gradient';
 import getImageThumb from '../utils/getImageThumb';
 import Dash from 'react-native-dash-2';
@@ -195,13 +195,13 @@ export default function MerchantScreen(): JSX.Element {
         <View style={{ paddingVertical: 10 }}>
           <Pressable
             onPress={() => navigation.goBack()}
-            style={{ borderRadius: 20 }}
+            style={{ borderRadius: ROUNDED_SIZE }}
           >
             <View
               style={{
                 height: 40,
                 width: 40,
-                borderRadius: 20,
+                borderRadius: ROUNDED_SIZE,
                 alignItems: 'center',
                 justifyContent: 'center',
                 overflow: 'hidden',
@@ -315,7 +315,7 @@ export default function MerchantScreen(): JSX.Element {
                   elevation: 5,
                   height: 60,
                   width: 60,
-                  borderRadius: 20,
+                  borderRadius: ROUNDED_SIZE,
                   alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: themeColors.primary,

@@ -1,5 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import { JSX, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import {
+  JSX,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SimpleHeader from '../components/SimpleHeader';
@@ -18,9 +25,9 @@ import useAppNavigation from '../hooks/useAppNavigation';
 import useAppSelector from '../hooks/useAppSelector';
 
 export default function ListMerchantScreen(): JSX.Element {
-  const route = useRoute<AppRouteProp<'List Menu'>>()
+  const route = useRoute<AppRouteProp<'List Menu'>>();
   const navigation = useAppNavigation();
-  const params = route.params.params
+  const params = route.params.params;
   const { currentCityName } = useContext(GeocodeContext);
   const { currentGeolocation: currentLocation } = useAppSelector(
     state => state.geolocationReducer,
@@ -65,61 +72,62 @@ export default function ListMerchantScreen(): JSX.Element {
     },
     [hasReachedBottom, currentLocation, currentCityName, loading, page, params],
   );
-  
-    const abortController = useRef<AbortController | null>(null);
-    useEffect(() => {
-      abortController.current = new AbortController();
-      return () => {
-        abortController.current?.abort();
-      };
-    }, []);
-  
-    useEffect(() => {
-      const signal = abortController.current?.signal;
-      fetchMerchant(signal);
-    }, [fetchMerchant]);
+
+  const abortController = useRef<AbortController | null>(null);
+  useEffect(() => {
+    abortController.current = new AbortController();
+    return () => {
+      abortController.current?.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    const signal = abortController.current?.signal;
+    fetchMerchant(signal);
+  }, [fetchMerchant]);
 
   return (
     <View style={{ flex: 1, paddingBottom: useSafeAreaInsets().bottom }}>
       <SimpleHeader title="Daftar Pedagang" />
-        {loading && page === 1 ? (
-          <LoadingBase />
-        ) : error && page === 1 ? (
-          <ErrorBase error={error} onReload={() => setLoading(true)} />
-        ) : (
-          <InfiniteScroll
-            onLoading={() => setLoading(true)}
-            hasReachedBottom={hasReachedBottom}
+      {loading && page === 1 ? (
+        <LoadingBase />
+      ) : error && page === 1 ? (
+        <ErrorBase error={error} onReload={() => setLoading(true)} />
+      ) : (
+        <InfiniteScroll
+          loading={loading}
+          onLoading={() => setLoading(true)}
+          hasReachedBottom={hasReachedBottom}
+        >
+          <View
+            style={{
+              paddingBottom: 20,
+              paddingHorizontal: 20,
+              gap: 20,
+              paddingTop: 10,
+            }}
           >
-            <View
-              style={{
-                paddingBottom: 20,
-                paddingHorizontal: 20,
-                gap: 20,
-                paddingTop: 10,
-              }}
-            >
-              {data.map((item, i) => {
-                return (
-                  <ItemHorizontal
-                    key={i}
-                    imgUri={getImageThumb(item.merchantPicture, 'xs')}
-                    title={item.merchantName}
-                    subTitle={item.merchantDetails}
-                    distance={Number(item.merchantDistance)}
-                    onPress={() => {
-                      navigation.navigate('Merchant', {
-                        params: {
-                          merchantId: item.merchantId
-                        }
-                      })
-                    }}
-                  />
-                );
-              })}
-            </View>
-          </InfiniteScroll>
-        )}
+            {data.map((item, i) => {
+              return (
+                <ItemHorizontal
+                  key={i}
+                  imgUri={getImageThumb(item.merchantPicture, 'xs')}
+                  title={item.merchantName}
+                  subTitle={item.merchantDetails}
+                  distance={Number(item.merchantDistance)}
+                  onPress={() => {
+                    navigation.navigate('Merchant', {
+                      params: {
+                        merchantId: item.merchantId,
+                      },
+                    });
+                  }}
+                />
+              );
+            })}
+          </View>
+        </InfiniteScroll>
+      )}
     </View>
   );
 }

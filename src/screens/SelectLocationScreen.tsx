@@ -1,8 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import { JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { GestureResponderEvent, Image, Text, View } from 'react-native';
+import { GestureResponderEvent, Image, Text, TouchableHighlightProps, View } from 'react-native';
 import MapView from 'react-native-maps';
-import { LATITUDE_DELTA, LONGITUDE_DELTA, ROUNDED_SIZE, themeColors } from '../constants';
+import {
+  LATITUDE_DELTA,
+  LONGITUDE_DELTA,
+  ROUNDED_SIZE,
+  themeColors,
+} from '../constants';
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -20,7 +25,7 @@ import Animated, {
 import Spinner from '../components/Spinner';
 import { SimpleLocationType } from '../redux/reducers/app.reducer';
 import { PlaceType } from '../types/google-map-types';
-import { generateCityAndRouteName } from '../utils';
+import { generateCityAndRouteName, generatePlaceName } from '../utils';
 import Button from '../components/Button';
 import { FontAwesome6SolidIconName } from '@react-native-vector-icons/fontawesome6';
 import Input from '../components/Input';
@@ -34,12 +39,13 @@ import LoadingBase from '../components/LoadingBase';
 import parsingError from '../utils/parsingError';
 import InfiniteScroll from '../components/InfiniteScroll';
 
-const CustomButton = ({
+export const CustomButton = ({
   onPress,
   icon,
   iconColor,
   children,
-}: {
+  ...props
+}: TouchableHighlightProps & {
   onPress?: (event: GestureResponderEvent) => void;
   icon?: FontAwesome6SolidIconName;
   iconColor?: string;
@@ -47,11 +53,12 @@ const CustomButton = ({
 }): JSX.Element => {
   return (
     <Pressable
+      {...props}
       onPress={onPress}
       viewStyle={{
-        backgroundColor: themeColors.grayLighter,
-        paddingVertical: 6,
-        paddingHorizontal: 10,
+        backgroundColor: themeColors.white,
+        paddingVertical: 5,
+        paddingHorizontal: 12,
         borderWidth: 1,
         borderColor: themeColors.borderColor,
         borderRadius: ROUNDED_SIZE,
@@ -168,19 +175,6 @@ export default function SelectLocationScreen(): JSX.Element {
           },
           signal,
         );
-        console.log(
-          {
-            location: currentGeolocation
-              ? {
-                  longitude: currentGeolocation.longitude,
-                  latitude: currentGeolocation.latitude,
-                }
-              : undefined,
-            query: searchQuery,
-            pageToken: pageToken,
-          },
-          result,
-        );
         if (result.status !== 'OK' && result.status !== 'ZERO_RESULTS') {
           setPageToken(null);
           throw new Error('Failed to find place');
@@ -269,15 +263,7 @@ export default function SelectLocationScreen(): JSX.Element {
 
   const placeName = useMemo(() => {
     const geocode = geocodeMarker.length < 1 ? selectedGeocode : geocodeMarker;
-    const address = geocode?.find(r =>
-      r.types?.includes('administrative_area_level_4'),
-    )?.address_components;
-    let poi = geocode?.find(r =>
-      r.types?.includes('point_of_interest'),
-    )?.address_components;
-    if (poi && poi.find(r => r.types.includes('point_of_interest'))?.short_name)
-      return poi.find(r => r.types.includes('point_of_interest'))?.short_name;
-    return address ? address[0].short_name : '-';
+    return generatePlaceName(geocode);
   }, [geocodeMarker, selectedGeocode]);
 
   return (
@@ -355,6 +341,8 @@ export default function SelectLocationScreen(): JSX.Element {
                 width: 8,
                 height: 8,
                 borderRadius: 8,
+                borderWidth: 1,
+                borderColor: themeColors.borderColor,
                 backgroundColor: themeColors.primary,
                 position: 'absolute',
                 bottom: 0,
@@ -473,11 +461,11 @@ export default function SelectLocationScreen(): JSX.Element {
               }}
             >
               <Input
-                styleTextInput={{ paddingVertical: 12 }}
+                styleTextInput={{ paddingVertical: 11 }}
                 iconStyle={{ paddingVertical: 12, marginRight: 12 }}
                 placeholder="Cari lokasi"
-                iconName="circle-dot"
-                iconColor={themeColors.blue}
+                iconName="magnifying-glass"
+                iconColor={themeColors.yellow}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
                 onChange={handleSearchQueryChanged}
@@ -567,11 +555,12 @@ export default function SelectLocationScreen(): JSX.Element {
           ) : searchResult.length < 1 && searchError ? (
             <ErrorBase
               error={searchError}
-              onReload={() => setIsLoading(true)}
+              onReload={() => setIsSearching(true)}
             />
           ) : (
             <Animated.View style={[{ flex: 1 }, opacitySearchResultWrapper]}>
               <InfiniteScroll
+                loading={isSearching}
                 onLoading={() => setIsSearching(true)}
                 hasReachedBottom={pageToken === null}
               >
@@ -632,7 +621,13 @@ export default function SelectLocationScreen(): JSX.Element {
             }}
           >
             <Button
-              disabled={isLoading || isDragging || !locationMarker}
+              disabled={
+                isLoading ||
+                isDragging ||
+                !locationMarker ||
+                requestError !== null
+              }
+              color={themeColors.blue}
               onPress={() => {
                 if (locationMarker) {
                   dispatch(

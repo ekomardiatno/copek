@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
-import { JSX, useContext, useEffect } from 'react';
+import { JSX, useContext } from 'react';
 import { StatusBar, Text, View } from 'react-native';
-import { REDUX_KEY_NAME, ROUNDED_SIZE, themeColors } from '../constants';
+import { ROUNDED_SIZE, themeColors } from '../constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import { setSession } from '../redux/actions/app.action';
@@ -12,7 +12,6 @@ import Pressable from '../components/Pressable';
 import { GeolocationContext } from '../components/GeolocationProvider';
 import Spinner from '../components/Spinner';
 import useAppSelector from '../hooks/useAppSelector';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen(): JSX.Element {
   const insets = useSafeAreaInsets();
@@ -40,14 +39,6 @@ export default function HomeScreen(): JSX.Element {
       ],
     });
   };
-
-  useEffect(() => {
-    const test = async () => {
-      const redux = await AsyncStorage.getItem(REDUX_KEY_NAME);
-      console.log(redux);
-    };
-    test();
-  }, []);
 
   return (
     <>
@@ -185,7 +176,9 @@ export default function HomeScreen(): JSX.Element {
               title="Ride"
               size={140}
               iconName="motorcycle"
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate('Ride')
+              }}
               color={themeColors.green}
               disabled={selectedLocation === null || isGettingCurrentLocation}
             />

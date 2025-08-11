@@ -58,10 +58,10 @@ export default function FoodOrderSecreen(): JSX.Element {
                     position: 'relative',
                   }}
                 >
-                  <Text style={{ fontWeight: '500', fontSize: 14 }}>
+                  <Text style={{ fontWeight: '500', fontSize: 14, paddingTop: 2 }}>
                     Lokasi pengiriman
                   </Text>
-                  <View style={{ position: 'absolute', top: 0, right: 0 }}>
+                  <View style={{ position: 'absolute', top: -2, right: 0 }}>
                     <Pressable
                       viewStyle={{
                         flexGrow: 0,
@@ -71,7 +71,7 @@ export default function FoodOrderSecreen(): JSX.Element {
                         borderRadius: ROUNDED_SIZE,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        paddingVertical: 3,
+                        paddingVertical: 6,
                         paddingHorizontal: 12,
                       }}
                       onPress={() => {
@@ -155,7 +155,7 @@ export default function FoodOrderSecreen(): JSX.Element {
                         </Text>
                         <Text
                           style={{
-                            marginTop: 5,
+                            marginTop: 4,
                             fontWeight: '300',
                             fontSize: 13,
                           }}
@@ -182,7 +182,7 @@ export default function FoodOrderSecreen(): JSX.Element {
                             fontWeight: '700',
                           }}
                         >
-                          Add More
+                          Tambah lagi
                         </Text>
                       </Button>
                     </View>

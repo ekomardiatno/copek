@@ -68,3 +68,14 @@ export function generateCityAndRouteName(geocode: PlaceType[]): {
   }
   return { cityName, routeName };
 }
+
+export function generatePlaceName(geocode: PlaceType[]): string {
+  const address = geocode?.find(r =>
+    r.types?.includes('administrative_area_level_4'),
+  )?.address_components;
+  let poi = geocode?.find(r =>
+    r.types?.includes('point_of_interest'),
+  )?.address_components;
+  const showPoi = poi?.find(r => r.types.includes('point_of_interest'))?.short_name;
+  return showPoi || (address ? address[0].short_name : '-');
+}

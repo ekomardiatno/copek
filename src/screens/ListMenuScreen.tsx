@@ -96,6 +96,7 @@ export default function ListMenuScreen(): JSX.Element {
         <ErrorBase error={error} onReload={() => setLoading(true)} />
       ) : (
         <InfiniteScroll
+          loading={loading}
           onLoading={() => setLoading(true)}
           hasReachedBottom={hasReachedBottom}
         >

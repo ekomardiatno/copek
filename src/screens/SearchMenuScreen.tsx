@@ -165,6 +165,7 @@ export default function SearchMenuScreen(): JSX.Element {
         </View>
       ) : (
         <InfiniteScroll
+          loading={loading}
           onLoading={() => setLoading(true)}
           hasReachedBottom={isAllLoaded}
         >

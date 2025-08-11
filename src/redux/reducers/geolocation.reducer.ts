@@ -1,4 +1,4 @@
-import { SET_ACCURACY, SET_CURRENT_GEOLOCATION, SET_PERMISSION_ANDROID, SET_PERMISSION_IOS, SET_SELECTED_GEOLOCATION } from '../types';
+import { SET_CURRENT_GEOLOCATION, SET_DESTINATION_LOCATION, SET_PERMISSION_ANDROID, SET_PERMISSION_IOS, SET_SELECTED_LOCATION } from '../types';
 import { PayloadAction } from '@reduxjs/toolkit';
 import persistReducer from 'redux-persist/es/persistReducer';
 import persistConfig from '../persistConfig';
@@ -12,13 +12,15 @@ const initialState: {
   selectedLocation: SimpleLocationType | null;
   permissionAndroid: PermissionStatus | null;
   permissionIos: PermissionIosStatus | null
-  accuracy: number,
+  destinationLocation: SimpleLocationType | null,
+  savedDestinationLocations: SimpleLocationType[]
 } = {
   currentGeolocation: null,
   selectedLocation: null,
+  destinationLocation: null,
   permissionAndroid: null,
   permissionIos: null,
-  accuracy: -1,
+  savedDestinationLocations: []
 };
 
 const geolocationReducer = (state = initialState, action: PayloadAction<any>) => {
@@ -29,7 +31,7 @@ const geolocationReducer = (state = initialState, action: PayloadAction<any>) =>
         ...state,
         currentGeolocation: payload as GeolocationResponse['coords'] | null,
       };
-    case SET_SELECTED_GEOLOCATION:
+    case SET_SELECTED_LOCATION:
       return {
         ...state,
         selectedLocation: payload as SimpleLocationType | null,
@@ -44,10 +46,10 @@ const geolocationReducer = (state = initialState, action: PayloadAction<any>) =>
         ...state,
         permissionIos: payload as PermissionIosStatus | null,
       };
-    case SET_ACCURACY:
+    case SET_DESTINATION_LOCATION:
       return {
         ...state,
-        SET_ACCURACY: payload as number,
+        destinationLocation: payload as SimpleLocationType | null,
       };
     default:
       return state;
