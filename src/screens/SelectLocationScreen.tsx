@@ -1,6 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import { JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { GestureResponderEvent, Image, Text, TouchableHighlightProps, View } from 'react-native';
+import { JSX, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  GestureResponderEvent,
+  Image,
+  Text,
+  TouchableHighlightProps,
+  View,
+} from 'react-native';
 import MapView from 'react-native-maps';
 import {
   LATITUDE_DELTA,
@@ -261,11 +267,6 @@ export default function SelectLocationScreen(): JSX.Element {
     fetchGeocode(signal);
   }, [fetchGeocode]);
 
-  const placeName = useMemo(() => {
-    const geocode = geocodeMarker.length < 1 ? selectedGeocode : geocodeMarker;
-    return generatePlaceName(geocode);
-  }, [geocodeMarker, selectedGeocode]);
-
   return (
     <View
       style={{
@@ -508,6 +509,7 @@ export default function SelectLocationScreen(): JSX.Element {
                   backgroundColor: themeColors.white,
                   bottom: 1,
                   opacity: opacityPlaceInfo,
+                  paddingBottom: 20,
                 }}
               >
                 {requestError ? (
@@ -517,33 +519,64 @@ export default function SelectLocationScreen(): JSX.Element {
                     onReload={() => setIsLoading(true)}
                   />
                 ) : (
-                  <View style={{ flexDirection: 'row', gap: 15 }}>
-                    <Icon
-                      name="circle-dot"
-                      color={themeColors.blue}
-                      size={30}
-                      style={{ marginTop: 8 }}
-                    />
-                    <View>
-                      <Text
+                  <View
+                    style={{
+                      flex: 1,
+                      padding: 10,
+                      backgroundColor: themeColors.grayLighter,
+                      borderRadius: ROUNDED_SIZE,
+                      borderWidth: 1,
+                      borderColor: themeColors.borderColor,
+                    }}
+                  >
+                    <View style={{ flexDirection: 'row', gap: 10 }}>
+                      <View
                         style={{
-                          marginTop: 6,
-                          fontWeight: '600',
-                          fontSize: 16,
+                          width: 30,
+                          height: 30,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderRadius: 100,
+                          backgroundColor: themeColors.blue
                         }}
                       >
-                        {placeName}
-                      </Text>
-                      <Text
-                        style={{ marginTop: 4, fontWeight: '300' }}
-                        numberOfLines={2}
-                      >
-                        {generateCityAndRouteName(
-                          geocodeMarker.length < 1
-                            ? selectedGeocode
-                            : geocodeMarker,
-                        ).routeName || '-'}
-                      </Text>
+                          <View
+                            style={{
+                              width: 12,
+                              height: 12,
+                              borderRadius: 100,
+                              backgroundColor: themeColors.white,
+                            }}
+                          />
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text
+                          style={{
+                            fontWeight: '600',
+                            fontSize: 13,
+                          }}
+                        >
+                          {generatePlaceName(
+                            geocodeMarker.length < 1
+                              ? selectedGeocode
+                              : geocodeMarker,
+                          )}
+                        </Text>
+                        <Text
+                          style={{
+                            marginTop: 4,
+                            fontWeight: '300',
+                            fontSize: 12,
+                          }}
+                          numberOfLines={2}
+                        >
+                          {generateCityAndRouteName(
+                            geocodeMarker.length < 1
+                              ? selectedGeocode
+                              : geocodeMarker,
+                          ).routeName || '-'}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 )}
